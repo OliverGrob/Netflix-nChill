@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="description">
-      <label>{{ series.description }}</label>
+      <label [innerHTML]="series.description"></label>
     </div>
     <div class="genres">
       <span *ngFor="let genre of series.genres">
