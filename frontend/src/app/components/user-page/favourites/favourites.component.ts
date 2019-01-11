@@ -1,6 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Series } from '../../../models/Series';
+import { UserService } from '../../../services/user/user.service';
+import { User } from '../../../models/User';
 
 @Component({
   selector: 'app-favourites',
@@ -9,11 +11,17 @@ import { Series } from '../../../models/Series';
 })
 export class FavouritesComponent implements OnInit {
 
-  @Input() favourites: Series[];
+  favourites: Series[];
 
-  constructor() { }
+  constructor(private userService: UserService) { }
 
   ngOnInit() {
+    this.userService.getUser()
+      .subscribe(
+        (user: User) => {
+          this.favourites = user.favourites;
+        }
+      );
   }
 
 }

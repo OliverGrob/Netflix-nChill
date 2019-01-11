@@ -1,6 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Episode } from '../../../models/Episode';
+import { User } from '../../../models/User';
+import { UserService } from '../../../services/user/user.service';
 
 @Component({
   selector: 'app-watched',
@@ -9,13 +11,19 @@ import { Episode } from '../../../models/Episode';
 })
 export class WatchedComponent implements OnInit {
 
-  @Input() watchedEpisodes: Episode[];
-  @Input() timeWasted;
+  watchedEpisodes: Episode[];
+  timeWasted;
 
-  constructor() {
-  }
+  constructor(private userService: UserService) { }
 
   ngOnInit() {
+    this.userService.getUser()
+      .subscribe(
+        (user: User) => {
+          this.watchedEpisodes = user.watchedEpisodes;
+          this.timeWasted = user.timeWasted;
+        }
+      );
   }
 
 }

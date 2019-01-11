@@ -1,19 +1,6 @@
 <div class="user-page" *ngIf="user">
-  <div class="watchlist" [routerLink]="['watchlist']" (click)="changeTab(1)">Watchlist
-    <div>
-      <app-watchlist *ngIf="tabNum === 1" [watchList]="tabNum === 1 ? user.watchlist : []"></app-watchlist>
-    </div>
-  </div>
-  <div class="favourites" [routerLink]="['favourites']" (click)="changeTab(2)">Favourites
-    <div>
-      <app-favourites *ngIf="tabNum === 2" [favourites]="tabNum === 2 ? user.favourites : []"></app-favourites>
-    </div>
-  </div>
-  <div class="watched" [routerLink]="['watched']" (click)="changeTab(3)">My Shows
-    <div>
-      <app-watched *ngIf="tabNum === 3" [watchedEpisodes]="tabNum === 3 ? user.watchedEpisodes : []"
-                   [timeWasted]="user.timeWasted"></app-watched>
-    </div>
-  </div>
+  <div class="watchlist" [routerLink]="['watchlist']">Watchlist</div>
+  <div class="favourites" [routerLink]="['favourites']">Favourites</div>
+  <div class="watched" [routerLink]="['watched']">My Shows</div>
   <router-outlet></router-outlet>
 </div>

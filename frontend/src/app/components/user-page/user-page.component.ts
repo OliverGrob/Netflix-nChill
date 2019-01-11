@@ -11,26 +11,14 @@ import { UserService } from '../../services/user/user.service';
 export class UserPageComponent implements OnInit {
 
   user: User;
-  tabNum: number;
 
   constructor(private userService: UserService) { }
 
   ngOnInit() {
-    console.log('User-page-constructor');
-    this.getUser(localStorage.getItem('username'));
-    this.tabNum = 1;
-  }
-
-  getUser(username: string): void {
-    this.userService.getUser(username)
-    .subscribe(user => {
-      console.log(user);
-      this.user = user;
-    });
-  }
-
-  changeTab(tabNum: number): void {
-    this.tabNum = tabNum;
+    this.userService.getUser()
+      .subscribe(user => {
+        this.user = user;
+      });
   }
 
 }
