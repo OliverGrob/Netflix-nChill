@@ -34,16 +34,7 @@ export class NavbarComponent implements OnInit {
     this.searchToggle = !this.searchToggle;
   }
 
-  join(): void {
-    this.userService.handleLogin('join');
-  }
-
-  login(): void {
-    this.userService.handleLogin('login');
-  }
-
   logout(): void {
-    localStorage.removeItem('userId');
     this.userService.logoutUser();
     this.router.navigate(['/']);
   }

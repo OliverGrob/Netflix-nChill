@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 import { UserService } from '../../services/user/user.service';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -12,55 +13,78 @@ import { ToastrService } from 'ngx-toastr';
 export class LoginComponent implements OnInit {
 
   showPart;
+  loginForm: FormGroup;
+  joinForm: FormGroup;
 
   constructor(private userService: UserService,
               private router: Router,
+              private route: ActivatedRoute,
               private toastr: ToastrService) { }
 
   ngOnInit() {
+    this.route.url
+      .subscribe(
+        (urlSegments: UrlSegment[]) => {
+          this.showPart = urlSegments[0].path;
+        }
+      );
     this.userService.loginStatus.subscribe(type => {
       this.showPart = type;
-      console.log(type);
     });
+    this.initForms();
   }
 
-  join(username, password, email, confirmPassword) {
-    if (password.value !== confirmPassword.value) {
+  resetCredentials(type: string) {
+    this.router.navigate(['/' + type]);
+  }
+
+  onJoinSubmit() {
+    if (this.joinForm.value['password-join'] !== this.joinForm.value['password-confirm']) {
       this.toastr.error('Passwords do not match!', 'Wrong');
       return;
     }
-    console.log(username.value, password.value, email.value, confirmPassword.value);
-    this.userService.validateJoin(username.value, password.value, email.value, confirmPassword.value);
-    this.resetCredentials(username, password, email, confirmPassword);
+    this.userService.validateJoin(
+      this.joinForm.value['username-join'],
+      this.joinForm.value['email'],
+      this.joinForm.value['password-join'],
+      this.joinForm.value['password-confirm']);
+    this.joinForm.reset();
   }
 
-  login(username, password) {
-    this.userService.validateLogin(username.value, password.value);
-    this.resetCredentials(username, password);
+  onLoginSubmit() {
+    this.userService.validateLogin(
+      this.loginForm.value['username-login'],
+      this.loginForm.value['password-login']);
+    this.joinForm.reset();
     this.router.navigate(['/']);
   }
 
-  handleLogin(type: string, username, password, email, confirmPassword) {
-    this.userService.handleLogin(type);
-    this.resetCredentials(username, password, email, confirmPassword);
+  private initForms() {
+    this.joinForm = new FormGroup({
+      'username-join': new FormControl(null, Validators.required),
+      'email': new FormControl(null, [Validators.required, Validators.email]),
+      'password-join': new FormControl('', Validators.required),
+      'password-confirm': new FormControl('', Validators.required)
+    }, this.validatePasswords.bind(this));
+    this.loginForm = new FormGroup({
+      'username-login': new FormControl(null, Validators.required),
+      'password-login': new FormControl(null, Validators.required)
+    });
   }
 
-  handleJoin(type: string, username, password) {
-    this.userService.handleLogin(type);
-    this.resetCredentials(username, password);
-  }
+  validatePasswords(control: FormControl) {
+    const password = control.value['password-join'];
+    const confirmPassword = control.value['password-confirm'];
 
-  resetCredentials(username, password, email?, confirmPassword?) {
-    username.value = '';
-    username.tabIndex = -1;
-    password.value = '';
-    password.tabIndex = -1;
-    if (email && confirmPassword) {
-      email.value = '';
-      email.tabIndex = -1;
-      confirmPassword.value = '';
-      confirmPassword.tabIndex = -1;
+    if (password === '' || password !== confirmPassword) {
+      return {
+        validatePassword: {
+          valid: false
+        }
+      };
     }
+
+    return null;
   }
 
 }

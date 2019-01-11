@@ -1,33 +1,38 @@
 <div class="forms">
-  <div class="join pure-form pure-form-stacked" (mouseover)="handleJoin('join', usernameLogin, passwordLogin)">
-       <!--(keydown)="handleJoin('join', usernameLogin, passwordLogin)"-->
+  <form class="join pure-form pure-form-stacked"
+        (click)="resetCredentials('join')"
+        (keydown)="resetCredentials('join')"
+        [formGroup]="joinForm"
+        (ngSubmit)="onJoinSubmit()">
     <fieldset>
-      <div [style.opacity]="showPart === 'join'? '1': '0.4'" class="join">
-        <label>Username</label>
-        <input placeholder="Username" type="text" required #username>
-        <label>Email</label>
-        <input placeholder="Email" type="text" required #email>
-        <label>Password</label>
-        <input placeholder="Password" type="password" required #password>
-        <label>Confirm Password</label>
-        <input placeholder="Confirm Password" type="password" required #confirmPassword>
-        <button class="pure-button pure-button-secondary"
-            (click)="join(username, password, email, confirmPassword)">Join</button>
+      <div [style.opacity]="showPart === 'join' ? '1': '0.4'">
+        <label for="username-join">Username</label>
+        <input type="text" id="username-join" placeholder="Username" formControlName="username-join">
+        <label for="email">Email</label>
+        <input type="text" id="email" placeholder="Email" formControlName="email">
+        <label for="password-join">Password</label>
+        <input type="password" id="password-join" formControlName="password-join">
+        <label for="password-confirm">Confirm Password</label>
+        <input type="password" id="password-confirm" formControlName="password-confirm">
+        <button type="submit" class="pure-button pure-button-secondary"
+                [disabled]="!joinForm.valid">Join</button>
       </div>
     </fieldset>
-  </div>
-  <div class="login-form pure-form pure-form-stacked"
-       (mouseover)="handleLogin('login', username, password, email, confirmPassword)">
-       <!--(keydown)="handleLogin('login', username, password, email, confirmPassword)"-->
+  </form>
+  <form class="login-form pure-form pure-form-stacked"
+        (click)="resetCredentials('login')"
+        (keydown)="resetCredentials('login')"
+        [formGroup]="loginForm"
+        (ngSubmit)="onLoginSubmit()">
     <fieldset>
-      <div [style.opacity]="showPart === 'login'? '1': '0.4'" class="login">
-        <label>Username</label>
-        <input placeholder="Username" type="text" required #usernameLogin>
-        <label>Password</label>
-        <input placeholder="Password" type="password" required #passwordLogin>
-        <button class="pure-button pure-button-secondary"
-            (click)="login(usernameLogin, passwordLogin)">Login</button>
+      <div [style.opacity]="showPart === 'login' ? '1': '0.4'">
+        <label for="username-login">Username</label>
+        <input type="text" id="username-login" placeholder="Username" formControlName="username-login">
+        <label for="password-login">Password</label>
+        <input type="password" id="password-login" formControlName="password-login">
+        <button type="submit" class="pure-button pure-button-secondary"
+                [disabled]="!loginForm.valid">Login</button>
       </div>
     </fieldset>
-  </div>
+  </form>
 </div>

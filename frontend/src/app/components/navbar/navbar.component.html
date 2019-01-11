@@ -1,23 +1,24 @@
 <div class="pure-menu pure-menu-horizontal">
-  <img class="pure-menu-heading" src="assets/logo.jpeg" [routerLink]="['/']">
+  <img class="pure-menu-heading" src="assets/logo.jpeg" routerLink="/">
   <ul class="pure-menu-list">
     <li class="pure-menu-item">
       <div class="pure-form">
-        <input class="search-field" placeholder="Search..." #searchInput *ngIf="searchToggle" (keyup.enter)="search(searchInput.value)">
+        <input class="search-field" placeholder="Search..." #searchInput *ngIf="searchToggle"
+               (keyup.enter)="search(searchInput.value)">
         <button class="pure-button" (click)="showSearchField()"><i class="fas fa-search"></i></button>
       </div>
     </li>
     <li class="pure-menu-item">
-      <button class="pure-button" *ngIf="!isLoggedIn" [routerLink]="[{ outlets: { 'login': ['login'] } }]" (click)="join()">Join</button>
+      <button class="pure-button" *ngIf="!isLoggedIn" routerLink="/join">Join</button>
     </li>
     <li class="pure-menu-item">
-      <button class="pure-button" *ngIf="!isLoggedIn" [routerLink]="[{ outlets: { 'login': ['login'] } }]" (click)="login()">Login</button>
+      <button class="pure-button" *ngIf="!isLoggedIn" routerLink="/login">Login</button>
     </li>
     <li class="pure-menu-item">
       <button class="pure-button" *ngIf="isLoggedIn" (click)="logout()">Logout</button>
     </li>
     <li class="pure-menu-item">
-      <a class="pure-menu-link" *ngIf="isLoggedIn" [routerLink]="['user-page']">My Page</a>
+      <a class="pure-menu-link" *ngIf="isLoggedIn" routerLink="/user-page">My Page</a>
     </li>
   </ul>
 </div>
