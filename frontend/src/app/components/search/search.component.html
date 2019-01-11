@@ -1,11 +1,12 @@
 <div class="menu">
   <div class="search-result">
-    <div class="search-item" *ngFor="let show of searchResult" (click)="seriesDetail.selectShow(show.id); selectShow(show)">
+    <div class="search-item" *ngFor="let show of searchResult"
+         (click)="selectShow(show)">
       <div class="search-title">{{ show.title }}</div>
     </div>
   </div>
   <div class="detail">
-    <app-series-detail #seriesDetail></app-series-detail>
+    <app-series-detail></app-series-detail>
   </div>
   <div class="message" *ngIf="searchResult.length === 0">
     <label>No series found</label>

@@ -23,7 +23,7 @@ export class SearchComponent implements OnInit {
   }
 
   selectShow(show: Series) {
-    // this.seriesService.getSingleSeries(show.id).subscribe(response => this.selectedShow = response['data']);
+    this.seriesService.selectedSeries.next(show);
     this.selectedShow = show;
   }
 

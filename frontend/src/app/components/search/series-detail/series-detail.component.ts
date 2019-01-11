@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
 import { Series } from '../../../models/Series';
 import { Episode } from '../../../models/Episode';
@@ -6,7 +7,7 @@ import { Season } from '../../../models/Season';
 import { UserService } from '../../../services/user/user.service';
 import { User } from '../../../models/User';
 import { SeriesService } from '../../../services/series/series.service';
-import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-series-detail',
@@ -25,106 +26,95 @@ export class SeriesDetailComponent implements OnInit {
 
   constructor(private userService: UserService,
               private seriesService: SeriesService,
-              private toastr: ToastrService) { }
+              private toastr: ToastrService,
+              private auth: AuthService) { }
 
   ngOnInit() {
-    this.userService.getUser(localStorage.getItem('username')).subscribe(response => {
-      // if (response['data']) {
-        console.log(response);
-        this.user = response;
-        console.log(this.user);
-        this.user.watchedEpisodes.forEach(episode => this.checkedEpisodes.push(episode.id));
-        this.user.favourites.forEach(series => this.hearted.push(series.id));
-      // } else {
-      //   console.log(response['error']);
-      // }
-    });
+    if (this.auth.isLoggedIn()) {
+      this.userService.getUser()
+        .subscribe(user => {
+          console.log(user);
+          this.user = user;
+          console.log(this.user);
+          this.user.watchedEpisodes.forEach(episode => this.checkedEpisodes.push(episode.id));
+          this.user.favourites.forEach(series => this.hearted.push(series.id));
+        });
+    }
+    this.seriesService.selectedSeries
+      .subscribe(
+        series => this.series = series
+      );
   }
 
   addWholeSeries(series: Series): void {
     console.log('all seasons added');
-    this.userService.addWholeSeries(localStorage.getItem('username'), series).subscribe(response => {
-      console.log(this.handleResponse(response));
+    this.userService.addWholeSeries(series).subscribe(response => {
+      console.log(response);
       this.toastr.success(series.title + ' added to your list!');
     });
   }
 
   removeWholeSeries(series: Series): void {
     console.log('all series removed');
-    this.userService.removeWholeSeries(localStorage.getItem('username'), series).subscribe(response => {
-      console.log(this.handleResponse(response));
+    this.userService.removeWholeSeries(series).subscribe(response => {
+      console.log(response);
       this.toastr.info(series.title + ' removed from your list!');
     });
   }
 
   addSingleSeason(season: Season): void {
     console.log('season added');
-    this.userService.addSingleSeason(localStorage.getItem('username'), season).subscribe(response => {
-      console.log(this.handleResponse(response));
+    this.userService.addSingleSeason(season).subscribe(response => {
+      console.log(response);
       this.toastr.success('Season ' + season.seasonNumber + ' added to your list!');
     });
   }
 
   removeSingleSeason(season: Season): void {
     console.log('season removed');
-    this.userService.removeSingleSeason(localStorage.getItem('username'), season).subscribe(response => {
-      console.log(this.handleResponse(response));
+    this.userService.removeSingleSeason(season).subscribe(response => {
+      console.log(response);
       this.toastr.info('Season ' + season.seasonNumber + ' removed from your list!');
     });
   }
 
   addSingleEpisode(episode: Episode): void {
     console.log('episode added');
-    this.userService.addSingleEpisode(localStorage.getItem('username'), episode).subscribe(response => {
-      console.log(this.handleResponse(response));
+    this.userService.addSingleEpisode(episode).subscribe(response => {
+      console.log(response);
       this.toastr.success('Episode ' + episode.episodeNumber + ': ' + episode.title + ' added to your list!');
     });
   }
 
   removeSingleEpisode(episode: Episode): void {
     console.log('episode removed');
-    this.userService.removeSingleEpisode(localStorage.getItem('username'), episode).subscribe(response => {
-      console.log(this.handleResponse(response));
+    this.userService.removeSingleEpisode(episode).subscribe(response => {
+      console.log(response);
       this.toastr.info('Episode ' + episode.episodeNumber + ' removed from your list!');
     });
   }
 
   addToFavourites(series: Series): void {
     console.log('added to favourites');
-    this.userService.addToFavourites(localStorage.getItem('username'), series).subscribe(response => {
-      console.log(this.handleResponse(response));
+    this.userService.addToFavourites(series).subscribe(response => {
+      console.log(response);
       this.toastr.success(series.title + ' added to your favourites!');
     });
   }
 
   removeFromFavourites(series: Series): void {
     console.log('removed from favourites');
-    this.userService.removeFromFavourites(localStorage.getItem('username'), series).subscribe(response => {
-      console.log(this.handleResponse(response));
+    this.userService.removeFromFavourites(series).subscribe(response => {
+      console.log(response);
       this.toastr.info(series.title + ' removed from your favourites!');
     });
   }
 
   addToWatchlist(series: Series): void {
     console.log('added to watchlist');
-    this.userService.addToWatchlist(localStorage.getItem('username'), series).subscribe(response => {
-      console.log(this.handleResponse(response));
-      this.toastr.success(series.title + ' added to your watchlist!');
-    });
-  }
-
-  handleResponse(response) {
-    // if (response['data']) {
-      return response;
-    // } else {
-    //   return response['error'];
-    // }
-  }
-
-  selectShow(seriesId: number) {
-    this.seriesService.getSingleSeries(seriesId).subscribe(response => {
+    this.userService.addToWatchlist(series).subscribe(response => {
       console.log(response);
-      this.series = response;
+      this.toastr.success(series.title + ' added to your watchlist!');
     });
   }
 
@@ -150,18 +140,12 @@ export class SeriesDetailComponent implements OnInit {
     this.checkedEpisodes.push(episodeId);
   }
 
-  toggleSeries(seriesId: number) {
+  toggleSeries() {
     this.checkedSeries = !this.checkedSeries;
-    // if (this.checkedSeries.includes(seriesId)) {
-    //   this.checkedSeries = this.checkedSeries.filter(currentId => currentId !== seriesId);
-    //   return;
-    // }
-    //
-    // this.checkedSeries.push(seriesId);
   }
 
   alreadyCheckedSeries(series: Series): boolean {
-    let episodesIds: number[] = [];
+    const episodesIds: number[] = [];
     series.seasons.forEach(season => season.episodes
       .forEach(episode => episodesIds.push(episode.id)));
     for (let id of episodesIds) {
@@ -173,7 +157,7 @@ export class SeriesDetailComponent implements OnInit {
   }
 
   alreadyCheckedSeason(season: Season): boolean {
-    let episodesIds: number[] = [];
+    const episodesIds: number[] = [];
     season.episodes.forEach(episode => episodesIds.push(episode.id));
     for (let id of episodesIds) {
       if (!this.checkedEpisodes.includes(id)) {
@@ -190,7 +174,7 @@ export class SeriesDetailComponent implements OnInit {
   handleWatchedSeries(series: Series, checkbox) {
     const checked = checkbox.classList.contains('already-checked');
     console.log(checked);
-    this.toggleSeries(series.id);
+    this.toggleSeries();
 
     if (checked) {
       series.seasons.forEach(season => season.episodes
