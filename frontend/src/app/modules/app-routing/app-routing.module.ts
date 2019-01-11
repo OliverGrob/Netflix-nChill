@@ -11,24 +11,22 @@ import { WatchedComponent } from '../../components/user-page/watched/watched.com
 import { AuthGuard } from '../../guards/auth/auth.guard';
 
 const routes: Routes = [
-  {path: '', component: TrendingComponent},
-  {path: 'login', component: LoginComponent, outlet: 'login'},
-  {path: 'search', component: SearchComponent},
-  {
-    path: 'user-page',
-    component: UserPageComponent,
-    children: [
-      {path: 'watchlist', component: WatchlistComponent},
-      {path: 'favourites', component: FavouritesComponent},
-      {path: 'watched', component: WatchedComponent},
-      {path: '', redirectTo: 'watchlist', pathMatch: 'full'}
-    ],
-    canActivate: [AuthGuard]
+  { path: '', component: TrendingComponent },
+  { path: 'join', component: LoginComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'search', component: SearchComponent },
+  { path: 'user-page', component: UserPageComponent, children: [
+      { path: '', redirectTo: 'watchlist', pathMatch: 'full' },
+      { path: 'watchlist', component: WatchlistComponent },
+      { path: 'favourites', component: FavouritesComponent },
+      { path: 'watched', component: WatchedComponent }
+    ], canActivate: [AuthGuard]
   }
 ];
 
 @NgModule({
-  imports: [ RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'}) ],
-  exports: [ RouterModule ]
+  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
+  exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

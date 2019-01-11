@@ -10,7 +10,7 @@ export class AuthGuard implements CanActivate {
 
   canActivate() {
     if (!sessionStorage.getItem('token')) {
-      this.router.navigate([{ outlets: { 'login': ['login'] } }]);
+      this.router.navigate(['/login']);
       return false;
     }
     return true;
