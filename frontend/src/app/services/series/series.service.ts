@@ -13,23 +13,9 @@ export class SeriesService {
 
   private baseUrl = 'http://localhost:8080';
   searchResult = new Subject<Series[]>();
+  selectedSeries = new Subject<Series>();
 
   constructor(private http: HttpClient) { }
-
-  getAllSeries(): Observable<Series[]> {
-    if ('azta') { return of([]); }
-
-    this.http.get<any>(`${this.baseUrl}/series`)
-      .pipe(
-      tap(_ => console.log(`Series found!`)),
-      catchError(response => this.handleError(response))
-    ).subscribe(response => {
-      if (response) {
-        this.searchResult.next(response['data']);
-        console.log(this.searchResult);
-      }
-    });
-  }
 
   getSingleSeries(id: number): Observable<Series> {
     return this.http.get<any>(`${this.baseUrl}/series/${id}`).pipe(
@@ -44,11 +30,11 @@ export class SeriesService {
     this.http.get<Series[]>(`${this.baseUrl}/series/search?searchTerm=${searchTerm}`)
       .pipe(
         tap(_ => console.log(`More series found!`)),
-        catchError(response => this.handleError(response))
-      ).subscribe((response: Series[]) => {
-        console.log(response);
-        if (response) {
-          this.searchResult.next(response);
+        catchError(response => this.handleError(response, []))
+      ).subscribe((series: Series[]) => {
+        console.log(series);
+        if (series) {
+          this.searchResult.next(series);
           console.log(this.searchResult);
         }
       });
