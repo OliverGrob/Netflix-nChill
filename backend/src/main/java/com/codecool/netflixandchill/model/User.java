@@ -19,10 +19,10 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
-    @Column(unique = true, nullable = false, name = "user_name")
-    private String userName;
+    @Column(unique = true, nullable = false, name = "username")
+    private String username;
 
     @Column(unique = true, nullable = false, name = "email_address")
     private String emailAddress;
@@ -32,6 +32,10 @@ public class User {
 
     @Column(name = "time_wasted", nullable = false)
     private int timeWasted;
+
+    @Column(name = "registration_date")
+    @Temporal(TemporalType.DATE)
+    private Date registrationDate;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -57,15 +61,11 @@ public class User {
     @JsonManagedReference
     private Collection<Episode> watchedEpisodes = new ArrayList<>();
 
-    @Column(name = "registration_date")
-    @Temporal(TemporalType.DATE)
-    private Date registrationDate;
-
 
     @Builder
-    public User(String userName, String emailAddress, String password, Collection<Series> watchlist,
+    public User(String username, String emailAddress, String password, Collection<Series> watchlist,
                 Collection<Series> favourites, Collection<Episode> watchedEpisodes, Date registrationDate) {
-        this.userName = userName;
+        this.username = username;
         this.emailAddress = emailAddress;
         this.password = password;
         this.watchlist = watchlist;
@@ -74,29 +74,51 @@ public class User {
         this.registrationDate = registrationDate;
     }
 
-    public void addWatchedEpisodes(Episode episode) {
-        watchedEpisodes.add(episode);
+    public void addEpisodeToWatched(Episode episode) {
+        this.watchedEpisodes.add(episode);
+        this.timeWasted += episode.getRuntime();
         episode.addUser(this);
     }
 
-    public void addSeriesToFavouriteList(Series series) {
-        favourites.add(series);
+    public void removeEpisodeFromWatched(Episode episode) {
+        this.watchedEpisodes.remove(episode);
+        this.timeWasted -= episode.getRuntime();
     }
 
-    public void addSeriesToWatchList(Series series) {
-        watchlist.add(series);
+    public void addSeasonToWatched(Season season) {
+        season.getEpisodes().forEach(episode -> {
+            if (!this.watchedEpisodes.contains(episode)) {
+                this.addEpisodeToWatched(episode);
+            }
+        });
     }
 
-    public void removeFromWatchedEpisode(Episode episode) {
-        watchedEpisodes.remove(episode);
+    public void removeSeasonFromWatched(Season season) {
+        season.getEpisodes().forEach(this::removeEpisodeFromWatched);
     }
 
-    public void removeFromFavouriteList(Series series) {
-        favourites.remove(series);
+    public void addSeriesToWatched(Series series) {
+        series.getSeasons().forEach(this::addSeasonToWatched);
     }
 
-    public void removeFromWatchList(Series series) {
-        watchlist.remove(series);
+    public void removeSeriesFromWatched(Series series) {
+        series.getSeasons().forEach(this::removeSeasonFromWatched);
+    }
+
+    public void addSeriesToFavourites(Series series) {
+        this.favourites.add(series);
+    }
+
+    public void removeSeriesFromFavourites(Series series) {
+        this.favourites.remove(series);
+    }
+
+    public void addSeriesToWatchlist(Series series) {
+        this.watchlist.add(series);
+    }
+
+    public void removeSeriesFromWatchlist(Series series) {
+        this.watchlist.remove(series);
     }
 
 }

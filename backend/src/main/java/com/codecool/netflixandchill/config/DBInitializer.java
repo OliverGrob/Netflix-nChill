@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Component
-class InitializerDB {
+class DBInitializer {
 
     private static final int NUMBER_OF_PAGES_TO_DOWNLOAD = 1;
     private static final int MAX_NUMBER_OF_PAGES_TO_DOWNLOAD = 545;

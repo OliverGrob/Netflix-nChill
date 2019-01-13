@@ -69,7 +69,7 @@ public class UserServiceTest {
 
         User tivadar = new User("tivadar", "tivadar@tivadar.hu", "tivadar", watchList, favouriteList, watchedEpisodes, new Date());
 
-        Mockito.when(userRepository.findByUserName(tivadar.getUserName()))
+        Mockito.when(userRepository.findByUsername(tivadar.getUsername()))
                 .thenReturn(tivadar);
 
         Mockito.when(userRepository.findUserByEmailAddress(tivadar.getEmailAddress()))
@@ -83,7 +83,7 @@ public class UserServiceTest {
         String userName = "tivadar";
         User found = userService.findByUsername(userName);
 
-        assertThat(found.getUserName())
+        assertThat(found.getUsername())
                 .isEqualTo(userName);
     }
 
@@ -106,7 +106,7 @@ public class UserServiceTest {
     @Test
     public void testCheckIfUserNameAlreadyExists() {
         String userName = "tivadar";
-        boolean userNameExists = userService.checkIfUserNameAlreadyExists(userName);
+        boolean userNameExists = userService.checkIfUsernameAlreadyExists(userName);
 
         assertTrue(userNameExists);
     }
@@ -114,7 +114,7 @@ public class UserServiceTest {
     @Test
     public void testCheckIfUserNameAlreadyExistsWhenUserNameDoesNotExist() {
         String userName = "ödön";
-        boolean userNameExists = userService.checkIfUserNameAlreadyExists(userName);
+        boolean userNameExists = userService.checkIfUsernameAlreadyExists(userName);
 
         assertFalse(userNameExists);
     }

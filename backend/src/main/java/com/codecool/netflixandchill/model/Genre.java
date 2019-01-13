@@ -25,6 +25,5 @@ public enum Genre {
     FOOD,
     ADULT,
     SPORTS,
-    TEENS,
-
+    TEENS
 }
