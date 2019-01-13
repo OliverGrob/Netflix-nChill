@@ -55,10 +55,10 @@ public class UserControllerTest {
     void testGetUserDetails() throws Exception {
         User tivadar = new User("tivadar", "tivadar", "tivadar", null, null, null, new Date());
 
-        Mockito.when(service.findByUsername(tivadar.getUserName()))
+        Mockito.when(service.findByUsername(tivadar.getUsername()))
                 .thenReturn(tivadar);
 
-        mvc.perform(get("/users/{username}", tivadar.getUserName()))
+        mvc.perform(get("/users/{username}", tivadar.getUsername()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
     }
@@ -72,10 +72,10 @@ public class UserControllerTest {
         watchList.add(series);
         User tivadar = new User("tivadar", "tivadar", "tivadar", watchList, null, null, new Date());
 
-        Mockito.when(service.getWatchlistForUser(tivadar.getUserName()))
+        Mockito.when(service.getWatchlistForUser(tivadar.getUsername()))
                 .thenReturn(watchList);
 
-        mvc.perform(get("/users/{username}/watchlist", tivadar.getUserName()))
+        mvc.perform(get("/users/{username}/watchlist", tivadar.getUsername()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$", hasSize(1)));
@@ -90,10 +90,10 @@ public class UserControllerTest {
         favouriteList.add(series);
         User tivadar = new User("tivadar", "tivadar", "tivadar", null, favouriteList, null, new Date());
 
-        Mockito.when(service.getFavouritesForUser(tivadar.getUserName()))
+        Mockito.when(service.getFavouritesForUser(tivadar.getUsername()))
                 .thenReturn(favouriteList);
 
-        mvc.perform(get("/users/{username}/favourites", tivadar.getUserName()))
+        mvc.perform(get("/users/{username}/favourites", tivadar.getUsername()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$", hasSize(1)));
@@ -108,10 +108,10 @@ public class UserControllerTest {
         watchedEpisodes.add(epsiodes);
         User tivadar = new User("tivadar", "tivadar", "tivadar", null, null, watchedEpisodes, new Date());
 
-        Mockito.when(service.getWatchedEpisodesForUser(tivadar.getUserName()))
+        Mockito.when(service.getWatchedEpisodesForUser(tivadar.getUsername()))
                 .thenReturn(watchedEpisodes);
 
-        mvc.perform(get("/users/{username}/already-watched", tivadar.getUserName()))
+        mvc.perform(get("/users/{username}/already-watched", tivadar.getUsername()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$", hasSize(1)));
@@ -125,10 +125,10 @@ public class UserControllerTest {
         watchedEpisodes.add(epsiode);
         User tivadar = new User("tivadar", "tivadar", "tivadar", null, null, null, new Date());
 
-        Mockito.when(service.getWatchedEpisodesForUser(tivadar.getUserName()))
+        Mockito.when(service.getWatchedEpisodesForUser(tivadar.getUsername()))
                 .thenReturn(watchedEpisodes);
 
-        mvc.perform(put("/users/{username}/add-episode-to-watched/episode/{id}", tivadar.getUserName(), epsiode.getId()))
+        mvc.perform(put("/users/{username}/add-episode-to-watched/episode/{id}", tivadar.getUsername(), epsiode.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
     }
