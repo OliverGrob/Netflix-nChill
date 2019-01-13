@@ -1,8 +1,8 @@
 package com.codecool.netflixandchill.controller;
 
+import com.codecool.netflixandchill.dto.ErrorDTO;
 import com.codecool.netflixandchill.model.Series;
 import com.codecool.netflixandchill.service.SeriesService;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,23 +23,33 @@ public class SeriesController {
         return this.seriesService.getAllSeries();
     }
 
-    @GetMapping("/{id}")
-    public Series getSingleSeries(@PathVariable Long id) {
-        return this.seriesService.getSingleSeriesById(id);
+    @GetMapping("/{seriesId}")
+    public ResponseEntity getSingleSeries(@PathVariable Long seriesId) {
+        Series series = this.seriesService.getSingleSeriesById(seriesId);
+
+        if (series != null) return ResponseEntity.status(HttpStatus.OK).body(series);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ErrorDTO.builder()
+                            .error("series cannot be found")
+                            .message("Series' id in the URL is incorrect!")
+                            .build());
     }
 
     @GetMapping("/search")
     public ResponseEntity getSeriesBySubstring(@RequestParam("searchTerm") String substring) {
-        if ( this.seriesService.getSeriesBySubstring(substring).isEmpty()) {
-            JSONObject error = new JSONObject();
-            error.put("error", "cannot find");
-            error.put("message", "This series not in series list");
+        List<Series> series = this.seriesService.getSeriesBySubstring(substring);
 
+        if (series.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(error.toString());
+                    .body(ErrorDTO.builder()
+                            .error("series cannot be found")
+                            .message("This series cannot be found in the database!")
+                            .build());
         }
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(this.seriesService.getSeriesBySubstring(substring));
+                .body(series);
     }
 
     @GetMapping("/trending")
