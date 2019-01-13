@@ -18,7 +18,7 @@ public class Series {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private String title;
@@ -56,7 +56,8 @@ public class Series {
     private List<Genre> genres = new ArrayList<>();
 
     @Builder
-    public Series(String title, String image, String trailer, String description, Status status, Date airDate, List<Genre> genres) {
+    public Series(String title, String image, String trailer, String description,
+                  Status status, Date airDate, List<Genre> genres) {
         this.title = title;
         this.image = image;
         this.trailer = trailer;
@@ -74,4 +75,13 @@ public class Series {
     public void addGenre(Genre genre) {
         genres.add(genre);
     }
+
+    public List<Episode> getAllEpisodes() {
+        List<Episode> allEpisodes = new ArrayList<>();
+
+        this.seasons.forEach(season -> allEpisodes.addAll(season.getEpisodes()));
+
+        return allEpisodes;
+    }
+
 }

@@ -18,7 +18,7 @@ public class Episode {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private String title;
@@ -52,7 +52,8 @@ public class Episode {
         this.episodeNumber = episodeNumber;
     }
 
-    public void addUser(User user) {
+    void addUser(User user) {
         users.add(user);
     }
+
 }
