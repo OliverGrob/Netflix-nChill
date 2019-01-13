@@ -13,7 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class WatchListDTO {
+
     List<Episode> watchedEpisodes;
     List<Season> watchedSeason;
     List<Series> watchedSeries;
+
 }
