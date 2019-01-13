@@ -1,20 +1,15 @@
 package com.codecool.netflixandchill.controller;
 
+import com.codecool.netflixandchill.dto.ErrorDTO;
 import com.codecool.netflixandchill.dto.WatchListDTO;
 import com.codecool.netflixandchill.model.Episode;
 import com.codecool.netflixandchill.model.Season;
 import com.codecool.netflixandchill.model.Series;
 import com.codecool.netflixandchill.model.User;
-import com.codecool.netflixandchill.service.EpisodeService;
-import com.codecool.netflixandchill.service.SeasonService;
-import com.codecool.netflixandchill.service.SeriesService;
 import com.codecool.netflixandchill.service.UserService;
-import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,39 +22,20 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private SeriesService seriesService;
-
-    @Autowired
-    private SeasonService seasonService;
-
-    @Autowired
-    private EpisodeService episodeService;
-
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping("/join")
     public ResponseEntity join(@RequestBody Map<String, String> requestJson) {
-        if (userService.checkIfEmailAlreadyExists(requestJson.get("email")) || userService.checkIfUserNameAlreadyExists("username")) {
-            JsonObject error = new JsonObject();
-            error.addProperty("error", "already exist");
-            error.addProperty("message", "This username or email already exist");
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(error.toString());
-        } else {
-            this.userService.addUser(requestJson.get("username"),
-                    requestJson.get("email"),
-                    bCryptPasswordEncoder.encode(requestJson.get("password")));
-            return new ResponseEntity(HttpStatus.OK);
-        }
+        if (this.userService.handleJoin(requestJson)) return new ResponseEntity(HttpStatus.OK);
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ErrorDTO.builder()
+                        .error("invalid credentials")
+                        .message("This username or email already exists!")
+                        .build());
     }
 
     @GetMapping("/{username}")
-    public User getUserDetails(@PathVariable String username, Authentication authentication) {
-        System.out.println("****************************************");
-        System.out.println(authentication.getName());
-        System.out.println(this.userService.findByUsername(authentication.getName()));
+    public User getUserDetails(@PathVariable String username) {
         return this.userService.findByUsername(username);
     }
 
@@ -76,126 +52,64 @@ public class UserController {
     @GetMapping("/{username}/already-watched")
     public WatchListDTO getWatchedEpisodesForUser(@PathVariable String username) {
         List<Episode> episodes = userService.getWatchedEpisodesForUser(username);
-        List<Season> seasons = userService.getWatchedEpisodesSeasons( userService.getWatchedEpisodesForUser(username));
-        List<Series> series = userService.getWatchedEpisodesSeries(userService.getWatchedEpisodesForUser(username));
+        List<Season> seasons = userService.getWatchedEpisodesSeasons(episodes);
+        List<Series> series = userService.getWatchedEpisodesSeries(episodes);
         return new WatchListDTO(episodes, seasons, series);
     }
 
-    @PutMapping("/{username}/add-episode-to-watched/episode/{id}")
-    public ResponseEntity addEpisodeToWatched(@PathVariable String username, @PathVariable Long id) {
-        if (!this.userService.getWatchedEpisodesForUser(username).contains(episodeService.getSingleEpisodeBySeasonId(id))) {
-            this.userService.addEpisodeToWatched(username, id);
-            this.userService.addRunTimeToTimeWastedWhenWatchedEpisode(username, episodeService.findEpisodeById(id));
+    @PutMapping("/{username}/toggle-episode-in-watched/episode/{episodeId}")
+    public ResponseEntity toggleEpisodeInWatched(@PathVariable String username, @PathVariable Long episodeId) {
+        if (this.userService.toggleEpisodeInWatched(username, episodeId)) return new ResponseEntity(HttpStatus.OK);
 
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(userService.getWatchedEpisodesForUser(username));
-        } else {
-            JsonObject error = new JsonObject();
-            error.addProperty("error", "already exist");
-            error.addProperty("message", "This episode already in watched list");
-
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(error.toString());
-        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ErrorDTO.builder()
+                        .error("invalid parameters")
+                        .message("Username and/or episode's id in the URL is incorrect!")
+                        .build());
     }
 
-    @PutMapping("/{username}/add-season-to-watched/season/{id}")
-    public ResponseEntity addSeasonToWatched(@PathVariable String username, @PathVariable Long id) {
-        if (userService.isSeasonNotInWatchlist(username, id)) {
-            userService.addSeasonToWatched(username, id);
-            userService.addRunTimeToTimeWastedWhenWatchedSeason(username, seasonService.findSeasonById(id));
+    @PutMapping("/{username}/toggle-season-in-watched/season/{seasonId}")
+    public ResponseEntity toggleSeasonInWatched(@PathVariable String username, @PathVariable Long seasonId) {
+        if (this.userService.toggleSeasonInWatched(username, seasonId)) return new ResponseEntity(HttpStatus.OK);
 
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(getWatchedEpisodesForUser(username));
-        }
-        else {
-            JsonObject error = new JsonObject();
-            error.addProperty("error", "already exist");
-            error.addProperty("message", "This season already in watched list");
-
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(error.toString());
-        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ErrorDTO.builder()
+                        .error("invalid parameters")
+                        .message("Username and/or season's id in the URL is incorrect!")
+                        .build());
     }
 
-    @PutMapping("/{username}/add-series-to-watched/series/{id}")
-    public ResponseEntity addSeriesToWatched(@PathVariable String username, @PathVariable Long id) {
-        if (!this.userService.getWatchedEpisodesForUser(username).contains(episodeService.getSingleEpisodeBySeasonId(seasonService.getSeasonBySeriesId(id).getId()))) {
-            this.userService.addSeriesToWatched(username, id);
-            this.userService.addRunTimeToTimeWastedWhenWatchedSeries(username, seriesService.getSingleSeriesById(id));
+    @PutMapping("/{username}/toggle-series-in-watched/series/{seriesId}")
+    public ResponseEntity toggleSeriesInWatched(@PathVariable String username, @PathVariable Long seriesId) {
+        if (this.userService.toggleSeriesInWatched(username, seriesId)) return new ResponseEntity(HttpStatus.OK);
 
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(userService.getWatchedEpisodesForUser(username));
-        } else {
-            JsonObject error = new JsonObject();
-            error.addProperty("error", "already exist");
-            error.addProperty("message", "This series already in watched list");
-
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(error.toString());
-        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ErrorDTO.builder()
+                        .error("invalid parameters")
+                        .message("Username and/or series' id in the URL is incorrect!")
+                        .build());
     }
 
-    @PutMapping("/{username}/add-series-to-favourites/series/{id}")
-    public ResponseEntity addSeriesToFavourites(@PathVariable String username, @PathVariable Long id) {
-        if (!this.userService.getFavouritesForUser(username).contains(seriesService.getSingleSeriesById(id))) {
-            this.userService.addSeriesToFavourites(username, id);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(userService.getFavouritesForUser(username));
-        } else {
-            JsonObject error = new JsonObject();
-            error.addProperty("error", "already exist");
-            error.addProperty("message", "This series already in favourite list");
+    @PutMapping("/{username}/toggle-series-in-favourites/series/{seriesId}")
+    public ResponseEntity toggleSeriesInFavourites(@PathVariable String username, @PathVariable Long seriesId) {
+        if (this.userService.toggleSeriesInFavourites(username, seriesId)) return new ResponseEntity(HttpStatus.OK);
 
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(error.toString());
-        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ErrorDTO.builder()
+                        .error("invalid parameters")
+                        .message("Username and/or series' id in the URL is incorrect!")
+                        .build());
     }
 
-    @PutMapping("/{username}/add-series-to-watchlist/series/{id}")
-    public ResponseEntity addSeriesToWatchlist(@PathVariable String username, @PathVariable Long id) {
-        if (!getWatchlistForUser(username).contains(seriesService.getSingleSeriesById(id))) {
-            this.userService.addSeriesToWatchlist(username, id);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(userService.getWatchlistForUser(username));
-        } else {
-            JsonObject error = new JsonObject();
-            error.addProperty("error", "already exist");
-            error.addProperty("message", "This series already in watchlist");
+    @PutMapping("{username}/toggle-series-in-watchlist/series/{seriesId}")
+    public ResponseEntity toggleSeriesInWatchlist(@PathVariable String username, @PathVariable Long seriesId) {
+        if (this.userService.toggleSeriesInWatchlist(username, seriesId)) return new ResponseEntity(HttpStatus.OK);
 
-            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED)
-                    .body(error.toString());
-        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ErrorDTO.builder()
+                        .error("invalid parameters")
+                        .message("Username and/or series' id in the URL is incorrect!")
+                        .build());
     }
-
-    @DeleteMapping("/{username}/remove-episode-from-watched/episode/{id}")
-    public void removeEpisodeFromWatched(@PathVariable String username, @PathVariable Long id) {
-        userService.removeEpisodeFromWatched(username, id);
-        this.userService.subtractRunTimeToTimeWastedWhenRemoveWatchedEpisode(username, episodeService.findEpisodeById(id));
-    }
-
-    @DeleteMapping("/{username}/remove-season-from-watched/season/{id}")
-    public void removeSeasonFromWatched(@PathVariable String username, @PathVariable Long id) {
-        userService.removeSeasonFromWatched(username, id);
-        userService.subtractRunTimeToTimeWastedWhenRemoveWatchedSeason(username, seasonService.findSeasonById(id));
-    }
-
-    @DeleteMapping("/{username}/remove-series-from-watched/series/{id}")
-    public void removeSeriesFromWatched(@PathVariable String username, @PathVariable Long id) {
-        userService.removeSeriesFromWatched(username, id);
-        this.userService.subtractRunTimeToTimeWastedWhenRemoveWatchedSeries(username, seriesService.getSingleSeriesById(id));
-    }
-
-    @DeleteMapping("/{username}/remove-series-from-favourites/series/{id}")
-    public void removeSeriesFromFavourite(@PathVariable String username, @PathVariable Long id) {
-        userService.removeSeriesFromFavourite(username, id);
-    }
-
-    @DeleteMapping("/{username}/remove-series-from-watchlist/series/{id}")
-    public void removeSeriesFromWatchlist(@PathVariable String username, @PathVariable Long id) {
-        userService.removeSeriesFromWatchlist(username, id);
-    }
-
-
 
 }
