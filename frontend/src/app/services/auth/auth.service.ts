@@ -24,18 +24,20 @@ export class AuthService {
     this.router.navigate(['/']);
   }
 
+  isLoggedIn(): boolean {
+    return (this.getUsername() !== undefined) && (!this.isTokenExpired());
+  }
+
   getUsername(): string {
     try {
-      console.log(Date.now() / 1000);
-      console.log(jwt_decode(sessionStorage.getItem('token')));
       return jwt_decode(sessionStorage.getItem('token'))['sub'];
     } catch (error) {
-      console.log('For some reason this gives an error, not my b tho');
+      console.log('For some reason this gives an error, not my b tho: ' + error);
     }
   }
 
-  isLoggedIn(): boolean {
-    return this.getUsername() !== undefined;
+  isTokenExpired(): boolean {
+    return +jwt_decode(sessionStorage.getItem('token'))['exp'] < Date.now() / 1000;
   }
 
 }
