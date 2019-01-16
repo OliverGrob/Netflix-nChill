@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth/auth.service';
 })
 export class NavbarComponent implements OnInit {
 
-  isLoggedIn = sessionStorage.getItem('token') !== null;
+  isLoggedIn: boolean;
   searchToggle = false;
 
   constructor(private userService: UserService,
@@ -21,6 +21,7 @@ export class NavbarComponent implements OnInit {
               private auth: AuthService) { }
 
   ngOnInit() {
+    this.isLoggedIn = this.auth.isLoggedIn();
     this.auth.loggedIn.subscribe(status => this.isLoggedIn = status);
   }
 
