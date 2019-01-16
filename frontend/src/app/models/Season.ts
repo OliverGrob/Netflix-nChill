@@ -1,4 +1,5 @@
 import { Episode } from './Episode';
+import { Series } from './Series';
 
 export class Season {
 
@@ -6,5 +7,6 @@ export class Season {
   year: Date;
   seasonNumber: number;
   episodes: Episode[];
+  series: Series;
 
 }
