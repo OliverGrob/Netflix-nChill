@@ -18,11 +18,12 @@ export class SeriesDetailComponent implements OnInit {
 
   series: Series;
   user: User;
-  token: string = sessionStorage.getItem('token');
-  showSeasons: number[] = [];
+  userLoggedIn: boolean = this.auth.isLoggedIn();
+  openedSeasons: number[] = [];
   hearted: number[] = [];
   checkedEpisodes: number[] = [];
   checkedSeries = false;
+  watchlist: number[] = [];
 
   constructor(private userService: UserService,
               private seriesService: SeriesService,
@@ -33,11 +34,10 @@ export class SeriesDetailComponent implements OnInit {
     if (this.auth.isLoggedIn()) {
       this.userService.getUser()
         .subscribe(user => {
-          console.log(user);
           this.user = user;
-          console.log(this.user);
           this.user.watchedEpisodes.forEach(episode => this.checkedEpisodes.push(episode.id));
           this.user.favourites.forEach(series => this.hearted.push(series.id));
+          this.user.watchlist.forEach(series => this.watchlist.push(series.id));
         });
     }
     this.seriesService.selectedSeries
@@ -46,89 +46,52 @@ export class SeriesDetailComponent implements OnInit {
       );
   }
 
-  addWholeSeries(series: Series): void {
-    console.log('all seasons added');
-    this.userService.addWholeSeries(series).subscribe(response => {
-      console.log(response);
-      this.toastr.success(series.title + ' added to your list!');
-    });
+  toggleWholeSeries(series: Series, operationIsAdd: boolean): void {
+    const operation = operationIsAdd ? 'added to' : 'removed from';
+    this.userService.toggleSeriesInWatched(series).subscribe(
+      () => this.toastr.success(`'${series.title}' ${operation} your list!`)
+    );
   }
 
-  removeWholeSeries(series: Series): void {
-    console.log('all series removed');
-    this.userService.removeWholeSeries(series).subscribe(response => {
-      console.log(response);
-      this.toastr.info(series.title + ' removed from your list!');
-    });
+  toggleSingleSeason(season: Season, operationIsAdd: boolean): void {
+    const operation = operationIsAdd ? 'added to' : 'removed from';
+    this.userService.toggleSingleSeason(season).subscribe(
+      () => this.toastr.success(`Season ${season.seasonNumber} ${operation} your list!`)
+    );
   }
 
-  addSingleSeason(season: Season): void {
-    console.log('season added');
-    this.userService.addSingleSeason(season).subscribe(response => {
-      console.log(response);
-      this.toastr.success('Season ' + season.seasonNumber + ' added to your list!');
-    });
+  toggleSingleEpisode(episode: Episode, operationIsAdd: boolean): void {
+    const operation = operationIsAdd ? 'added to' : 'removed from';
+    this.userService.toggleSingleEpisode(episode).subscribe(
+      () => this.toastr.success(`Episode ${episode.episodeNumber}: '${episode.title}' ${operation} your list!`)
+    );
   }
 
-  removeSingleSeason(season: Season): void {
-    console.log('season removed');
-    this.userService.removeSingleSeason(season).subscribe(response => {
-      console.log(response);
-      this.toastr.info('Season ' + season.seasonNumber + ' removed from your list!');
-    });
+  toggleFavourites(series: Series, operationIsAdd: boolean): void {
+    const operation = operationIsAdd ? 'added to' : 'removed from';
+    this.userService.toggleFavourites(series).subscribe(
+      () => this.toastr.success(`'${series.title}' ${operation} your favourites!`)
+    );
   }
 
-  addSingleEpisode(episode: Episode): void {
-    console.log('episode added');
-    this.userService.addSingleEpisode(episode).subscribe(response => {
-      console.log(response);
-      this.toastr.success('Episode ' + episode.episodeNumber + ': ' + episode.title + ' added to your list!');
-    });
-  }
-
-  removeSingleEpisode(episode: Episode): void {
-    console.log('episode removed');
-    this.userService.removeSingleEpisode(episode).subscribe(response => {
-      console.log(response);
-      this.toastr.info('Episode ' + episode.episodeNumber + ' removed from your list!');
-    });
-  }
-
-  addToFavourites(series: Series): void {
-    console.log('added to favourites');
-    this.userService.addToFavourites(series).subscribe(response => {
-      console.log(response);
-      this.toastr.success(series.title + ' added to your favourites!');
-    });
-  }
-
-  removeFromFavourites(series: Series): void {
-    console.log('removed from favourites');
-    this.userService.removeFromFavourites(series).subscribe(response => {
-      console.log(response);
-      this.toastr.info(series.title + ' removed from your favourites!');
-    });
-  }
-
-  addToWatchlist(series: Series): void {
-    console.log('added to watchlist');
-    this.userService.addToWatchlist(series).subscribe(response => {
-      console.log(response);
-      this.toastr.success(series.title + ' added to your watchlist!');
-    });
+  toggleWatchlist(series: Series, operationIsAdd: boolean): void {
+    const operation = operationIsAdd ? 'added to' : 'removed from';
+    this.userService.toggleWatchlist(series).subscribe(
+      () => this.toastr.success(`'${series.title}' ${operation} your watchlist!`)
+    );
   }
 
   toggleSeason(seasonId: number) {
-    if (this.showSeasons.includes(seasonId)) {
-      this.showSeasons = this.showSeasons.filter(currentId => currentId !== seasonId);
+    if (this.openedSeasons.includes(seasonId)) {
+      this.openedSeasons = this.openedSeasons.filter(currentId => currentId !== seasonId);
       return;
     }
 
-    this.showSeasons.push(seasonId);
+    this.openedSeasons.push(seasonId);
   }
 
   alreadyOpened(seasonId: number): boolean {
-    return this.showSeasons.includes(seasonId);
+    return this.openedSeasons.includes(seasonId);
   }
 
   toggleEpisode(episodeId: number) {
@@ -140,40 +103,23 @@ export class SeriesDetailComponent implements OnInit {
     this.checkedEpisodes.push(episodeId);
   }
 
-  toggleSeries() {
-    this.checkedSeries = !this.checkedSeries;
-  }
+  handleWatchedEpisode(episode: Episode) {
+    const operationIsAdd = !this.checkedEpisodes.includes(episode.id);
 
-  alreadyCheckedSeries(series: Series): boolean {
-    const episodesIds: number[] = [];
-    series.seasons.forEach(season => season.episodes
-      .forEach(episode => episodesIds.push(episode.id)));
-    for (let id of episodesIds) {
-      if (!this.checkedEpisodes.includes(id)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  alreadyCheckedSeason(season: Season): boolean {
-    const episodesIds: number[] = [];
-    season.episodes.forEach(episode => episodesIds.push(episode.id));
-    for (let id of episodesIds) {
-      if (!this.checkedEpisodes.includes(id)) {
-        return false;
-      }
-    }
-    return true;
+    this.toggleEpisode(episode.id);
+    this.toggleSingleEpisode(episode, operationIsAdd);
   }
 
   alreadyCheckedEpisode(episodeId: number): boolean {
     return this.checkedEpisodes.includes(episodeId);
   }
 
-  handleWatchedSeries(series: Series, checkbox) {
-    const checked = checkbox.classList.contains('already-checked');
-    console.log(checked);
+  toggleSeries() {
+    this.checkedSeries = !this.checkedSeries;
+  }
+
+  handleWatchedSeries(series: Series) {
+    const checked = this.alreadyCheckedSeries(series);
     this.toggleSeries();
 
     if (checked) {
@@ -183,7 +129,7 @@ export class SeriesDetailComponent implements OnInit {
             this.toggleEpisode(episode.id);
           }
         }));
-      this.removeWholeSeries(series);
+      this.toggleWholeSeries(series, false);
       return;
     }
 
@@ -194,11 +140,23 @@ export class SeriesDetailComponent implements OnInit {
         }
       }));
 
-    this.addWholeSeries(series);
+    this.toggleWholeSeries(series, true);
   }
 
-  handleWatchedSeason(season: Season, checkbox) {
-    const checked = checkbox.classList.contains('checked');
+  alreadyCheckedSeries(series: Series): boolean {
+    const episodesIds: number[] = [];
+    series.seasons.forEach(season => season.episodes
+      .forEach(episode => episodesIds.push(episode.id)));
+    for (const id of episodesIds) {
+      if (!this.checkedEpisodes.includes(id)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  handleWatchedSeason(season: Season) {
+    const checked = this.alreadyCheckedSeason(season);
 
     if (checked) {
       season.episodes.forEach(episode => {
@@ -206,7 +164,7 @@ export class SeriesDetailComponent implements OnInit {
           this.toggleEpisode(episode.id);
         }
       });
-      this.removeSingleSeason(season);
+      this.toggleSingleSeason(season, false);
       return;
     }
 
@@ -216,40 +174,46 @@ export class SeriesDetailComponent implements OnInit {
       }
     });
 
-    this.addSingleSeason(season);
+    this.toggleSingleSeason(season, true);
   }
 
-  handleWatchedEpisode(episode: Episode, checkbox) {
-    this.toggleEpisode(episode.id);
-    if (checkbox.classList.contains('checked')) {
-      this.removeSingleEpisode(episode);
-      return;
+  alreadyCheckedSeason(season: Season): boolean {
+    const episodesIds: number[] = [];
+    season.episodes.forEach(episode => episodesIds.push(episode.id));
+    for (const id of episodesIds) {
+      if (!this.checkedEpisodes.includes(id)) {
+        return false;
+      }
     }
-
-    this.addSingleEpisode(episode);
+    return true;
   }
 
-  toggleFavourite(seriesId: number) {
-    if (this.hearted.includes(seriesId)) {
-      this.hearted = this.hearted.filter(currentId => currentId !== seriesId);
-      return;
+  handleFavourites(series: Series) {
+    const operationIsAdd = !this.hearted.includes(series.id);
+
+    if (this.hearted.includes(series.id)) {
+      this.hearted = this.hearted.filter(currentId => currentId !== series.id);
+    } else {
+      this.hearted.push(series.id);
     }
 
-    this.hearted.push(seriesId);
+    this.toggleFavourites(series, operationIsAdd);
   }
 
   alreadyFavourite(series: Series): boolean {
     return this.hearted.includes(series.id);
   }
 
-  handleFavourites(series: Series, checkbox) {
-    this.toggleFavourite(series.id);
-    if (checkbox.classList.contains('hearted')) {
-      this.removeFromFavourites(series);
-      return;
+  handleWatchlist(series: Series) {
+    const operationIsAdd = !this.watchlist.includes(series.id);
+
+    if (this.watchlist.includes(series.id)) {
+      this.watchlist = this.watchlist.filter(currentId => currentId !== series.id);
+    } else {
+      this.watchlist.push(series.id);
     }
 
-    this.addToFavourites(series);
+    this.toggleWatchlist(series, operationIsAdd);
   }
 
 }

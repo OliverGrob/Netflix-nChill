@@ -1,4 +1,4 @@
-<div class="forms">
+<div class="forms text-light">
   <form class="join pure-form pure-form-stacked"
         (click)="resetCredentials('join')"
         (keydown)="resetCredentials('join')"
@@ -11,9 +11,9 @@
         <label for="email">Email</label>
         <input type="text" id="email" placeholder="Email" formControlName="email">
         <label for="password-join">Password</label>
-        <input type="password" id="password-join" formControlName="password-join">
+        <input type="password" id="password-join" autocomplete="off" formControlName="password-join">
         <label for="password-confirm">Confirm Password</label>
-        <input type="password" id="password-confirm" formControlName="password-confirm">
+        <input type="password" id="password-confirm" autocomplete="off" formControlName="password-confirm">
         <button type="submit" class="pure-button pure-button-secondary"
                 [disabled]="!joinForm.valid">Join</button>
       </div>
@@ -29,7 +29,7 @@
         <label for="username-login">Username</label>
         <input type="text" id="username-login" placeholder="Username" formControlName="username-login">
         <label for="password-login">Password</label>
-        <input type="password" id="password-login" formControlName="password-login">
+        <input type="password" id="password-login" autocomplete="off" formControlName="password-login">
         <button type="submit" class="pure-button pure-button-secondary"
                 [disabled]="!loginForm.valid">Login</button>
       </div>

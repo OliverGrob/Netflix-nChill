@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { Series } from '../../models/Series';
 import { SeriesService } from '../../services/series/series.service';
@@ -13,13 +14,14 @@ export class SearchComponent implements OnInit {
   searchResult: Series[] = [];
   selectedShow: Series;
 
-  constructor(private seriesService: SeriesService) { }
+  constructor(private seriesService: SeriesService,
+              private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.seriesService.searchResult.subscribe(series => {
       this.searchResult = series;
-      console.log(this.searchResult);
     });
+    this.seriesService.searchSeries(this.route.snapshot.queryParams['searchTerm']);
   }
 
   selectShow(show: Series) {
