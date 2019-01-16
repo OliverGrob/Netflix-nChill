@@ -1,24 +1,29 @@
-<div class="pure-menu pure-menu-horizontal">
-  <img class="pure-menu-heading" src="assets/logo.jpeg" routerLink="/">
-  <ul class="pure-menu-list">
-    <li class="pure-menu-item">
-      <div class="pure-form">
-        <input class="search-field" placeholder="Search..." #searchInput *ngIf="searchToggle"
+<nav class="navbar navbar-expand-lg navbar-dark pure-menu">
+  <img class="navbar-brand" src="assets/logo.jpeg" routerLink="/">
+  <ul class="nav navbar-nav mr-auto"></ul>
+  <ul class="navbar-nav navbar-right">
+    <li class="nav-item m-2">
+      <div class="form-inline mt-1">
+        <input class="form-control search-field" placeholder="Search..." #searchInput *ngIf="searchToggle"
                (keyup.enter)="search(searchInput.value)">
-        <button class="pure-button" (click)="showSearchField()"><i class="fas fa-search"></i></button>
+        <button class="btn btn-secondary bg-light text-dark"
+                (click)="showSearchField()"><i class="fas fa-search"></i></button>
       </div>
     </li>
-    <li class="pure-menu-item">
-      <button class="pure-button" *ngIf="!isLoggedIn" routerLink="/join">Join</button>
+    <li class="nav-item m-2">
+      <a class="nav-link h4 font-weight-bolder" *ngIf="!isLoggedIn"
+         routerLink="/join" routerLinkActive="active">Join</a>
     </li>
-    <li class="pure-menu-item">
-      <button class="pure-button" *ngIf="!isLoggedIn" routerLink="/login">Login</button>
+    <li class="nav-item m-2">
+      <a class="nav-link h4 font-weight-bolder" *ngIf="!isLoggedIn"
+         routerLink="/login" routerLinkActive="active">Login</a>
     </li>
-    <li class="pure-menu-item">
-      <button class="pure-button" *ngIf="isLoggedIn" (click)="logout()">Logout</button>
+    <li class="nav-item m-2">
+      <a class="nav-link h4 font-weight-bolder cursor-like" *ngIf="isLoggedIn" (click)="logout()">Logout</a>
     </li>
-    <li class="pure-menu-item">
-      <a class="pure-menu-link" *ngIf="isLoggedIn" routerLink="/user-page">My Page</a>
+    <li class="nav-item m-2">
+      <a class="nav-link h4 font-weight-bolder" *ngIf="isLoggedIn"
+         routerLink="/user-page" routerLinkActive="active">My Page</a>
     </li>
   </ul>
-</div>
+</nav>

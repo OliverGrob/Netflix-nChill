@@ -7,13 +7,13 @@ input {
   color: #191919;
 }
 
-.tooltip {
+.tooltip-message {
   position: relative;
   display: inline-block;
 }
 
 /* Tooltip text */
-.tooltip .tooltip-text {
+.tooltip-message .tooltip-text {
   font-size: 60%;
   visibility: hidden;
   width: 125px;
@@ -34,7 +34,11 @@ input {
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
-.tooltip:hover .tooltip-text {
+.tooltip-message:hover .tooltip-text {
   visibility: visible;
   z-index: 2;
+}
+
+#toast-container > div {
+  opacity: 1;
 }

@@ -8,42 +8,18 @@ img {
 }
 
 .search-field {
-  display: none;
   background-color: white;
   font-size: 110%;
 }
 
-.pure-menu-item {
-  margin: 3px;
-}
-
-.pure-menu-list {
-  float: right;
-  margin-top: 1.5em;
-}
-
-.pure-button {
-  font-size: 110%;
-  border-radius: 7px;
-  background-color: transparent;
-  color: white;
-}
-
-.pure-button:hover {
-  color: #9e9e9e;
-}
-
-.pure-menu-link {
-  font-size: 110%;
-  border-radius: 7px;
-  background-color: transparent;
-  color: white;
-}
-
-.pure-menu-link:hover {
-  color: #9e9e9e;
-}
-
 .fa-search {
   font-size: 120%;
+}
+
+a.active {
+  color : #585b9e !important;
+}
+
+.cursor-like {
+  cursor: pointer;
 }
