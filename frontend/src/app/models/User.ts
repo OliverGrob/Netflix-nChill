@@ -1,15 +1,13 @@
 import { Series } from './Series';
-import { Episode } from './Episode';
 
 export class User {
 
-  id: number;
-  userName: string;
+  username: string;
   emailAddress: string;
+  timeWasted: number;
   registrationDate: Date;
   watchlist: Series[];
   favourites: Series[];
-  watchedEpisodes: Episode[];
-  timeWasted: number;
+  watchedEpisodesSeries: Series[];
 
 }

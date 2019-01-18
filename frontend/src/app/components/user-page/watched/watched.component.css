@@ -1,17 +1,48 @@
-/*.text-center {*/
-  /*text-align: center;*/
-/*}*/
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
 
-/*.watched-table {*/
-  /*padding: 6px;*/
-  /*margin-left: 30%;*/
-/*}*/
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
 
-/*.wasted-table {*/
-  /*margin-left: 40%;*/
-/*}*/
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
 
-/*thead {*/
-  /*background-color: #ddd9;;*/
-  /*color: black;*/
-/*}*/
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.series {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.series-detail {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+}
+
+.btn-primary {
+  background-color: #888888;
+  border: #888888;
+}
+
+.btn-primary:hover, .active-tab {
+  background-color: #0D47A1;
+  border: #0D47A1;
+}
+
+.hr-self {
+  margin-top: 1rem;
+  border: thin solid;
+  color: #888888;
+}
+
+.season-title {
+  min-width: 110px;
+  max-width: 110px;
+  min-height: 40px;
+  max-height: 40px;
+}

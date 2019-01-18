@@ -1,45 +1,52 @@
-<!--<div *ngFor="let series of watchedEpisodes">-->
-  <!--{{ series.title }}-->
-  <!--{{ series.description }}-->
-  <!--<span *ngFor="let genre of series.genres">-->
-    <!--{{ genre.name }}-->
-  <!--</span>-->
-  <!--<div *ngFor="let season of series.seasons">-->
-    <!--Season {{ season.seasonNumber }}-->
-    <!--<div *ngFor="let episode of season.episodes">-->
-      <!--{{ episode.episodeNumber }}-->
-      <!--{{ episode.title }}-->
-      <!--{{ episode.releaseDate }}-->
-      <!--{{ episode.runtime }}-->
-    <!--</div>-->
-  <!--</div>-->
-<!--</div>-->
-<div *ngIf="watchedEpisodes">
-  <table class="pure-table watched-table">
-    <thead>
-      <tr>
-        <th>Release date</th>
-        <th>Episode number</th>
-        <th>Title</th>
-        <th>Runtime</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let episode of watchedEpisodes">
-        <td>{{ episode.releaseDate }}</td>
-        <td class="text-center">{{ episode.episodeNumber }}</td>
-        <td>{{ episode.title }}</td>
-        <td>{{ episode.runtime }} minute(s)</td>
-      </tr>
-    </tbody>
-  </table>
-  <table class="wasted-table pure-table">
-    <thead>
-      <tr>
-        <th>
-          Time wasted: {{ timeWasted | timeConverter }}
-        </th>
-      </tr>
-    </thead>
-  </table>
+<div *ngIf="user !== undefined">
+  <div class="row">
+    <div class="col-12 p-2 series" *ngFor="let series of user.watchedEpisodesSeries">
+      <div class="d-flex mb-1">
+        <div class="h3 mr-2 flex-grow-1 font-weight-bold">
+          {{ series.title }} <span class="h6 font-italic">({{ series.status | lowercase }})</span>
+        </div>
+        <div class="mx-2 align-self-center btn btn-primary"
+             [ngClass]="descriptionsOpen.includes(series.id) ? 'active-tab' : ''"
+             (click)="onSelectDescription(series.id)">Description
+        </div>
+        <div class="mx-2 align-self-center btn btn-primary"
+             [ngClass]="seasonsOpen.includes(series.id) ? 'active-tab' : ''"
+             (click)="onSelectSeasons(series.id)">Seasons
+        </div>
+        <div class="mx-2 align-self-center btn btn-danger"><span class="close">&times;</span></div>
+      </div>
+      <div class="p-2 series-detail"
+           *ngIf="descriptionsOpen.includes(series.id)"
+           [innerHTML]="series.description">
+      </div>
+      <div class="d-flex p-2 series-detail overflow-auto"
+           *ngIf="seasonsOpen.includes(series.id)">
+        <div class="btn btn-primary mx-1 season-title"
+             *ngFor="let season of series.seasons"
+             [ngClass]="seasonEpisodesOpen === season ? 'active-tab' : ''"
+             (click)="onSelectSingleSeason(season, series.id)">
+          <div>
+            Season {{ season.seasonNumber }}
+          </div>
+        </div>
+      </div>
+      <div class="p-2 series-detail"
+           *ngIf="series.seasons.includes(seasonEpisodesOpen)">
+        <div class="d-flex">
+          <div class="col-5 font-weight-bold">Episode number</div>
+          <div class="col-2 font-weight-bold">Title</div>
+          <div class="col-3 text-right font-weight-bold">Date of release</div>
+          <div class="col-2 text-right font-weight-bold">Runtime</div>
+        </div>
+        <div class="hr-self my-1"></div>
+        <div class="d-flex" *ngFor="let episode of seasonEpisodesOpen.episodes">
+          <div class="col-2">Episode {{ episode.episodeNumber }}</div>
+          <div class="col-6 font-weight-bold">{{ episode.title }}</div>
+          <div class="col-2">{{ episode.releaseDate }}</div>
+          <div class="col-2 text-right">{{ episode.runtime }} min.</div>
+        </div>
+      </div>
+      <div class="hr-self"></div>
+    </div>
+  </div>
 </div>

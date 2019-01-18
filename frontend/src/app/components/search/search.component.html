@@ -1,4 +1,4 @@
-<div class="menu text-light">
+<div class="menu text-light" *ngIf="searchResult">
   <div class="search-result">
     <div class="search-item" *ngFor="let show of searchResult"
          (click)="selectShow(show)">
@@ -12,3 +12,10 @@
     <label>No series found</label>
   </div>
 </div>
+<ngx-spinner
+  bdColor="rgba(51,51,51,0.8)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box">
+  <p class="text-white font-weight-bold h3 mt-5">Loading search result...</p>
+</ngx-spinner>

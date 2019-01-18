@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class WatchListDTO {
+public class WatchedDTO {
 
     List<Episode> watchedEpisodes;
     List<Season> watchedSeason;

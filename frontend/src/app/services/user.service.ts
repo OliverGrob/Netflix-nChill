@@ -8,11 +8,11 @@ import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
-import { Series } from '../../models/Series';
-import { Season } from '../../models/Season';
-import { Episode } from '../../models/Episode';
-import { User } from '../../models/User';
-import { AuthService } from '../auth/auth.service';
+import { Series } from '../models/Series';
+import { Season } from '../models/Season';
+import { Episode } from '../models/Episode';
+import { User } from '../models/User';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -117,6 +117,15 @@ export class UserService {
 
   logoutUser() {
     this.auth.logout();
+  }
+
+  getRecommendedSeries(genreName: string) {
+    return this.http.get<Series[]>(
+      `${this.baseUrl}/${this.getUsername()}/recommended-series?genre=${genreName}`)
+      .pipe(
+        tap(() => console.log('Recommended series found!')),
+        catchError(response => this.handleError(response))
+      );
   }
 
   private handleError<T> (error: HttpErrorResponse, result?: T) {

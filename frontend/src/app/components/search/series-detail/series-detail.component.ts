@@ -4,10 +4,10 @@ import { ToastrService } from 'ngx-toastr';
 import { Series } from '../../../models/Series';
 import { Episode } from '../../../models/Episode';
 import { Season } from '../../../models/Season';
-import { UserService } from '../../../services/user/user.service';
+import { UserService } from '../../../services/user.service';
 import { User } from '../../../models/User';
-import { SeriesService } from '../../../services/series/series.service';
-import { AuthService } from '../../../services/auth/auth.service';
+import { SeriesService } from '../../../services/series.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-series-detail',
@@ -35,9 +35,15 @@ export class SeriesDetailComponent implements OnInit {
       this.userService.getUser()
         .subscribe(user => {
           this.user = user;
-          this.user.watchedEpisodes.forEach(episode => this.checkedEpisodes.push(episode.id));
-          this.user.favourites.forEach(series => this.hearted.push(series.id));
-          this.user.watchlist.forEach(series => this.watchlist.push(series.id));
+          user.watchedEpisodesSeries.forEach(
+            series => series.seasons.forEach(
+              season => season.episodes.forEach(
+                episode => this.checkedEpisodes.push(episode.id)
+              )
+            )
+          );
+          user.favourites.forEach(series => this.hearted.push(series.id));
+          user.watchlist.forEach(series => this.watchlist.push(series.id));
         });
     }
     this.seriesService.selectedSeries

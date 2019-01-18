@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+import { NgxSpinnerService } from 'ngx-spinner';
+
 import { Series } from '../../models/Series';
-import { SeriesService } from '../../services/series/series.service';
+import { SeriesService } from '../../services/series.service';
 
 @Component({
   selector: 'app-search',
@@ -11,15 +13,18 @@ import { SeriesService } from '../../services/series/series.service';
 })
 export class SearchComponent implements OnInit {
 
-  searchResult: Series[] = [];
+  searchResult: Series[];
   selectedShow: Series;
 
   constructor(private seriesService: SeriesService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.seriesService.searchResult.subscribe(series => {
-      this.searchResult = series;
+      this.searchResult = series ? series : [];
+      this.spinner.hide();
     });
     this.seriesService.searchSeries(this.route.snapshot.queryParams['searchTerm']);
   }

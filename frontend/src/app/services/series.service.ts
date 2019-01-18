@@ -4,7 +4,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of, Subject } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 
-import { Series } from '../../models/Series';
+import { Series } from '../models/Series';
 
 @Injectable({
   providedIn: 'root'
@@ -30,19 +30,17 @@ export class SeriesService {
 
     this.http.get<Series[]>(`${this.baseUrl}/search?searchTerm=${searchTerm}`)
       .pipe(
-        tap(() => console.log(`More series found!`)),
+        tap(() => console.log('More series found!')),
         catchError(response => this.handleError(response))
       ).subscribe((series: Series[]) => {
-        if (series) {
-          this.searchResult.next(series);
-        }
+        this.searchResult.next(series);
       });
   }
 
   getTrendingSeries() {
     return this.http.get<Series[]>(`${this.baseUrl}/trending`)
       .pipe(
-        tap(() => console.log(`Trending series found!`)),
+        tap(() => console.log('Trending series found!')),
         catchError(response => this.handleError(response))
       );
   }
