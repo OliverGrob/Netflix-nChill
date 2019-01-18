@@ -1,4 +1,5 @@
 import { Season } from './Season';
+import { Episode } from './Episode';
 
 export class Series {
 
@@ -10,5 +11,6 @@ export class Series {
   seasons: Season[];
   genres: string[];
   image: string;
+  allEpisodes: Episode[];
 
 }
