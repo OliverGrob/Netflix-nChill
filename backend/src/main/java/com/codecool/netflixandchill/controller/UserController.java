@@ -1,11 +1,10 @@
 package com.codecool.netflixandchill.controller;
 
 import com.codecool.netflixandchill.dto.ErrorDTO;
-import com.codecool.netflixandchill.dto.WatchListDTO;
-import com.codecool.netflixandchill.model.Episode;
-import com.codecool.netflixandchill.model.Season;
+import com.codecool.netflixandchill.dto.UserDTO;
+import com.codecool.netflixandchill.dto.WatchedDTO;
+import com.codecool.netflixandchill.model.Genre;
 import com.codecool.netflixandchill.model.Series;
-import com.codecool.netflixandchill.model.User;
 import com.codecool.netflixandchill.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,8 +34,8 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public User getUserDetails(@PathVariable String username) {
-        return this.userService.findByUsername(username);
+    public UserDTO getUserDetails(@PathVariable String username) {
+        return this.userService.createUpdatedUser(username);
     }
 
     @GetMapping("/{username}/watchlist")
@@ -50,11 +49,8 @@ public class UserController {
     }
 
     @GetMapping("/{username}/already-watched")
-    public WatchListDTO getWatchedEpisodesForUser(@PathVariable String username) {
-        List<Episode> episodes = userService.getWatchedEpisodesForUser(username);
-        List<Season> seasons = userService.getWatchedEpisodesSeasons(episodes);
-        List<Series> series = userService.getWatchedEpisodesSeries(episodes);
-        return new WatchListDTO(episodes, seasons, series);
+    public WatchedDTO getWatchedEpisodesWithSeriesForUser(@PathVariable String username) {
+        return this.userService.getWatchedEpisodesWithSeriesForUser(username);
     }
 
     @PutMapping("/{username}/toggle-episode-in-watched/episode/{episodeId}")
@@ -110,6 +106,22 @@ public class UserController {
                         .error("invalid parameters")
                         .message("Username and/or series' id in the URL is incorrect!")
                         .build());
+    }
+
+    @GetMapping("{username}/recommended-series")
+    public ResponseEntity getRecommendedSeries(@PathVariable String username, @RequestParam Genre genre) {
+        List<Series> series = this.userService.getRecommendedSeries(username, genre);
+
+        if (series.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ErrorDTO.builder()
+                            .error("series cannot be found")
+                            .message("This genre(s) cannot be found in the database!")
+                            .build());
+        }
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(series);
     }
 
 }
