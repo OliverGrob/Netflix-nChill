@@ -1,9 +1,8 @@
 package com.codecool.netflixandchill.service;
 
-import com.codecool.netflixandchill.model.Episode;
-import com.codecool.netflixandchill.model.Season;
-import com.codecool.netflixandchill.model.Series;
-import com.codecool.netflixandchill.model.User;
+import com.codecool.netflixandchill.dto.UserDTO;
+import com.codecool.netflixandchill.dto.WatchedDTO;
+import com.codecool.netflixandchill.model.*;
 import com.codecool.netflixandchill.repository.EpisodeRepository;
 import com.codecool.netflixandchill.repository.SeasonRepository;
 import com.codecool.netflixandchill.repository.SeriesRepository;
@@ -66,6 +65,20 @@ public class UserService {
         return this.userRepository.findByUsername(username);
     }
 
+    public UserDTO createUpdatedUser(String username) {
+        User user = this.findByUsername(username);
+
+        return UserDTO.builder()
+                .username(user.getUsername())
+                .emailAddress(user.getEmailAddress())
+                .timeWasted(user.getTimeWasted())
+                .registrationDate(user.getRegistrationDate())
+                .watchlist(user.getWatchlist())
+                .favourites(user.getFavourites())
+                .watchedEpisodesSeries(this.getWatchedEpisodesWithSeriesForUser(username).getWatchedSeries())
+                .build();
+    }
+
     public List<Series> getWatchlistForUser(String username) {
         return (List<Series>) this.findByUsername(username).getWatchlist();
     }
@@ -78,18 +91,38 @@ public class UserService {
         return (List<Episode>) this.findByUsername(username).getWatchedEpisodes();
     }
 
-    public List<Season> getWatchedEpisodesSeasons(List<Episode> episodes) {
+    private List<Season> getWatchedEpisodesSeasons(List<Episode> episodes) {
         return episodes.stream()
                 .map(Episode::getSeason)
                 .distinct()
                 .collect(Collectors.toList());
     }
 
-    public List<Series> getWatchedEpisodesSeries(List<Episode> episodes) {
+    private List<Series> getWatchedEpisodesSeries(List<Episode> episodes) {
         return episodes.stream()
                 .map(episode -> episode.getSeason().getSeries())
                 .distinct()
                 .collect(Collectors.toList());
+    }
+
+    public WatchedDTO getWatchedEpisodesWithSeriesForUser(String username) {
+        List<Episode> episodes = this.getWatchedEpisodesForUser(username);
+        List<Season> seasons = this.getWatchedEpisodesSeasons(episodes);
+        List<Series> series = this.getWatchedEpisodesSeries(episodes);
+
+        series.forEach(currentSeries -> currentSeries.setSeasons(
+                seasons.stream()
+                        .filter(season -> season.getSeries().getId().equals(currentSeries.getId()))
+                        .collect(Collectors.toList())
+        ));
+        series.forEach(currentSeries -> currentSeries.getSeasons()
+                .forEach(currentSeason -> currentSeason.setEpisodes(
+                        episodes.stream()
+                                .filter(episode -> episode.getSeason().getId().equals(currentSeason.getId()))
+                                .collect(Collectors.toList())
+                )));
+
+        return new WatchedDTO(episodes, seasons, series);
     }
 
     public boolean toggleEpisodeInWatched(String username, Long episodeId) {
@@ -165,6 +198,18 @@ public class UserService {
 
         this.userRepository.save(user);
         return true;
+    }
+
+    public List<Series> getRecommendedSeries(String username, Genre genreName) {
+        List<Series> usersWatchedSeries = this.getWatchedEpisodesWithSeriesForUser(username).getWatchedSeries();
+        List<Series> allRecommendedSeries = this.seriesRepository.findByGenresContaining(genreName);
+
+        Collections.shuffle(allRecommendedSeries);
+
+        return allRecommendedSeries.stream()
+                .filter(series -> !usersWatchedSeries.contains(series))
+                .limit(5)
+                .collect(Collectors.toList());
     }
 
 }
