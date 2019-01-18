@@ -1,6 +1,60 @@
-<div class="user-page" *ngIf="user">
-  <div class="watchlist" [routerLink]="['watchlist']">Watchlist</div>
-  <div class="favourites" [routerLink]="['favourites']">Favourites</div>
-  <div class="watched" [routerLink]="['watched']">My Shows</div>
-  <router-outlet></router-outlet>
+<div class="container-fluid" *ngIf="user">
+  <div class="row text-light">
+    <div class="col-4">
+      <div class="user-stats">
+        <div>
+          <div *ngIf="allGenres.length > 0"><b>Your watched series by genres:</b></div>
+          <canvas #pieChartCanvas id="pieChart">{{ pieChart }}</canvas>
+        </div>
+        <div>Total time wasted:</div>
+        <b>{{ user?.timeWasted | timeConverter }}</b>
+      </div>
+      <div class="watchlist"
+           [routerLink]="['watchlist']" routerLinkActive="watchlist-active">
+        Watchlist
+        <span class="badge badge-primary">{{ user?.watchlist.length }}</span>
+      </div>
+      <div class="favourites"
+           [routerLink]="['favourites']" routerLinkActive="favourites-active">
+        Favourites
+        <span class="badge badge-primary">{{ user?.favourites.length }}</span>
+      </div>
+      <div class="watched"
+           [routerLink]="['watched']" routerLinkActive="watched-active">
+        My Shows
+        <span class="badge badge-primary">{{ watchedEpisodesNum }}</span>
+      </div>
+    </div>
+    <div class="col-5">
+      <router-outlet class="container"></router-outlet>
+    </div>
+    <div class="col-3 my-3">
+      <div *ngFor="let series of recommendedSeries">
+        <div class="h4">{{ series.title }}</div>
+        <div class="clearfix">
+          <img class="float-left pr-3" [src]="series.image" alt="{{ series.title }}" style="max-width: 150px">
+          <p class="text-justify"
+             [ngSwitch]="isRecommendedSeriesDescriptionOpen(series)">
+            <span *ngSwitchCase="true"
+                  [innerHtml]="series.description">
+            </span>
+            <span *ngSwitchCase="false"
+                  [innerHtml]="series.description.slice(0, 250) + '...'">
+            </span>
+            <span class="font-italic font-weight-bold series-recom"
+                  (click)="onShowMoreOrLess(series)"
+                  [innerText]="isRecommendedSeriesDescriptionOpen(series) ? ' (show less)' : ' (show more...)'">
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+<ngx-spinner
+  bdColor="rgba(51,51,51,0.8)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box">
+  <p class="text-white font-weight-bold h3 mt-5">Loading user page...</p>
+</ngx-spinner>

@@ -1,8 +1,28 @@
-.watched, .watchlist, .favourites {
-  display: inline-block;
-  width: 100%;
+.watchlist, .favourites, .watched, .user-stats {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 20px 10px;
+  background-color: #888888;
+  border-radius: 5px;
+  font-size: 130%;
+  cursor: pointer;
 }
 
-body {
-  font-size: 120%;
+.user-stats {
+  background-color: #0D47A1;
+  cursor: default;
+}
+
+.watchlist-active, .favourites-active, .watched-active {
+  background-color: #0D47A1;
+}
+
+.series-recom {
+  color: #0D47A1;
+  cursor: pointer;
+}
+
+.series-recom:hover {
+  color: #888888;
 }

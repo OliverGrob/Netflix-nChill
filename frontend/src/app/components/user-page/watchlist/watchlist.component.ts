@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import { Series } from '../../../models/Series';
 import { User } from '../../../models/User';
-import { UserService } from '../../../services/user/user.service';
+import { UserPageService } from '../../../services/user-page.service';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-watchlist',
@@ -11,17 +12,30 @@ import { UserService } from '../../../services/user/user.service';
 })
 export class WatchlistComponent implements OnInit {
 
-  watchList: Series[];
+  user: User;
+  watchlist: Series[];
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService,
+              private userPageService: UserPageService) { }
 
   ngOnInit() {
-    this.userService.getUser()
-      .subscribe(
-        (user: User) => {
-          this.watchList = user.watchlist;
+    this.userPageService.user.subscribe(
+      (user: User) => {
+        if (user === undefined) {
+          this.userService.getUser().subscribe(
+            (userSafe: User) => this.initializeFields(userSafe)
+          );
+          return;
         }
-      );
+        this.initializeFields(user);
+      }
+    );
+    this.userPageService.requestUser.next();
+  }
+
+  initializeFields(user: User) {
+    this.user = user;
+    this.watchlist = user.watchlist;
   }
 
 }
