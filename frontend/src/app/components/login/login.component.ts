@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
-import { UserService } from '../../services/user/user.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -35,7 +35,9 @@ export class LoginComponent implements OnInit {
   }
 
   resetCredentials(type: string) {
-    this.router.navigate(['/' + type]);
+    if (!this.router.url.includes(type)) {
+      this.router.navigate(['/' + type]);
+    }
   }
 
   onJoinSubmit() {
