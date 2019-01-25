@@ -20,6 +20,7 @@ import { TrendingComponent } from './components/trending/trending.component';
 import { AppRoutingModule } from './modules/app-routing/app-routing.module';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { TimeConverterPipe } from './pipes/time-converter.pipe';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { TimeConverterPipe } from './pipes/time-converter.pipe';
     SearchComponent,
     SeriesDetailComponent,
     TrendingComponent,
-    TimeConverterPipe
+    TimeConverterPipe,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
