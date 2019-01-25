@@ -11,6 +11,7 @@ export class Series {
   seasons: Season[];
   genres: string[];
   image: string;
+  trailer: string;
   allEpisodes: Episode[];
 
 }

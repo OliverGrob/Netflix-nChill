@@ -11,16 +11,19 @@
       </div>
       <div class="watchlist"
            [routerLink]="['watchlist']" routerLinkActive="watchlist-active">
+        <i class="list fas fa-list pr-2"></i>
         Watchlist
         <span class="badge badge-primary">{{ user?.watchlist.length }}</span>
       </div>
       <div class="favourites"
            [routerLink]="['favourites']" routerLinkActive="favourites-active">
+        <i class="text-danger hearted fas fa-heart pr-2"></i>
         Favourites
         <span class="badge badge-primary">{{ user?.favourites.length }}</span>
       </div>
       <div class="watched"
            [routerLink]="['watched']" routerLinkActive="watched-active">
+        <i class="text-success fas fa-plus pr-2"></i>
         My Shows
         <span class="badge badge-primary">{{ watchedEpisodesNum }}</span>
       </div>
@@ -51,8 +54,11 @@
     </div>
   </div>
 </div>
+<div *ngIf="user">
+  <app-footer></app-footer>
+</div>
 <ngx-spinner
-  bdColor="rgba(51,51,51,0.8)"
+  bdColor="rgba(51,51,51,0.4)"
   size="large"
   color="#fff"
   type="square-jelly-box">
