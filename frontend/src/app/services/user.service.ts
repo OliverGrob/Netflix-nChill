@@ -105,14 +105,16 @@ export class UserService {
       {'username': username, 'password': password},
       { observe: 'response'})
       .pipe(
-        tap(() => console.log('User login')),
-        catchError(response => this.handleError(response)))
-      .subscribe((response: HttpResponse<any>) => {
-        if (response.headers.get('Authorization') !== null) {
-          this.toastr.success('You logged in successfully!');
-          this.auth.sendToken(response.headers.get('Authorization'));
-        }
-      });
+        tap(() => console.log('User login'))
+      )
+      .subscribe(
+        (response: HttpResponse<any>) => {
+          if (response.headers.get('Authorization') !== null) {
+            this.toastr.success('You logged in successfully!');
+            this.auth.sendToken(response.headers.get('Authorization'));
+          }
+        },
+        (response: HttpErrorResponse) => this.handleError(response));
   }
 
   logoutUser() {
@@ -132,6 +134,7 @@ export class UserService {
     console.error(error);
     console.error(error.error['error']);
     console.error(error.error['message']);
+    this.toastr.error(error.error['message']);
     if (error.status === 401) {
       sessionStorage.removeItem('token');
       this.router.navigate(['/']);
