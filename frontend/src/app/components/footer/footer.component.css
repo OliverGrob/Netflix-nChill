@@ -1,0 +1,18 @@
+.footer-line {
+  width: 120px;
+  height: 3px;
+  border-radius: 10px;
+}
+
+.page-footer {
+  background-color: #000000db;
+}
+
+a {
+  color: rgba(255, 255, 255, .5);
+}
+
+a:hover {
+  text-decoration: none;
+  color: rgba(255, 255, 255, .75);
+}

@@ -1,5 +1,7 @@
 package com.codecool.netflixandchill.security;
 
+import com.codecool.netflixandchill.dto.ErrorDTO;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.jsonwebtoken.Claims;
@@ -86,6 +88,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                               HttpServletResponse response,
                                               AuthenticationException failed) throws IOException, ServletException {
         logger.info("Failed authentication!");
+
+        response.getWriter().write(new Gson().toJson(ErrorDTO.builder()
+                .error("invalid parameters")
+                .message("Username or password is incorrect!")
+                .build()));
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
         this.failureHandler.onAuthenticationFailure(request, response, failed);
     }
 

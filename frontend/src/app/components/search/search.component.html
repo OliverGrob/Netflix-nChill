@@ -1,19 +1,24 @@
-<div class="menu text-light" *ngIf="searchResult">
-  <div class="search-result">
-    <div class="search-item" *ngFor="let show of searchResult"
-         (click)="selectShow(show)">
-      <div class="search-title">{{ show.title }}</div>
+<div class="container-fluid text-light" *ngIf="searchResult">
+  <div class="row">
+    <div class="col-3 search-result">
+      <div class="search-item" *ngFor="let show of searchResult"
+           (click)="selectShow(show)">
+        <div class="search-title">{{ show.title }}</div>
+      </div>
+    </div>
+    <div class="col-9 detail">
+      <app-series-detail></app-series-detail>
+    </div>
+    <div class="message" *ngIf="searchResult.length === 0">
+      <label>No series found</label>
     </div>
   </div>
-  <div class="detail">
-    <app-series-detail></app-series-detail>
-  </div>
-  <div class="message" *ngIf="searchResult.length === 0">
-    <label>No series found</label>
-  </div>
+</div>
+<div *ngIf="searchResult">
+  <app-footer></app-footer>
 </div>
 <ngx-spinner
-  bdColor="rgba(51,51,51,0.8)"
+  bdColor="rgba(51,51,51,0.4)"
   size="large"
   color="#fff"
   type="square-jelly-box">

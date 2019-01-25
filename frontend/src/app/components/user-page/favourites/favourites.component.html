@@ -1,7 +1,9 @@
-<div class="favourites">
-  <div class="favourite" *ngFor="let show of favourites">
-    <div class="series-title">
-      <label> {{ show.title }}</label>
+<div *ngIf="user">
+  <div class="row">
+    <div class="col-12 p-2" *ngFor="let show of favourites">
+      <div class="series-title">
+        <label> {{ show.title }}</label>
+      </div>
     </div>
   </div>
 </div>
