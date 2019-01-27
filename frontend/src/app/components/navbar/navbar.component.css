@@ -3,7 +3,7 @@ img {
   height: 80px;
 }
 
-.pure-menu {
+.navbar-dark {
   background-color: #000000db;
 }
 
@@ -18,8 +18,4 @@ img {
 
 a.active {
   color : #0D47A1 !important;
-}
-
-.cursor-like {
-  cursor: pointer;
 }

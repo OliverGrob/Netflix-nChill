@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, ViewChild } from '@angular/core';
 
 import { Chart } from 'node_modules/chart.js';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -18,6 +18,7 @@ export class UserPageComponent implements OnInit {
   @ViewChild('pieChartCanvas') pieChartCanvas: ElementRef;
   context: CanvasRenderingContext2D;
 
+  contentLoaded = false;
   user: User;
   watchedEpisodesNum = 0;
   allGenres: {name: string, amount: number}[] = [];
@@ -39,6 +40,7 @@ export class UserPageComponent implements OnInit {
           series => this.watchedEpisodesNum += series.allEpisodes.length
         );
         setTimeout(() => this.initPieChart(), 0);
+        this.contentLoaded = true;
         this.spinner.hide();
       }), 1000);
     this.userPageService.requestUser.subscribe(

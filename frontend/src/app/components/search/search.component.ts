@@ -13,6 +13,7 @@ import { SeriesService } from '../../services/series.service';
 })
 export class SearchComponent implements OnInit {
 
+  contentLoaded = false;
   searchResult: Series[];
   selectedShow: Series;
 
@@ -24,6 +25,7 @@ export class SearchComponent implements OnInit {
     this.spinner.show();
     this.seriesService.searchResult.subscribe(series => {
       this.searchResult = series ? series : [];
+      this.contentLoaded = true;
       this.spinner.hide();
     });
     this.seriesService.searchSeries(this.route.snapshot.queryParams['searchTerm']);
