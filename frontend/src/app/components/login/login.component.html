@@ -7,13 +7,17 @@
     <fieldset>
       <div [style.opacity]="showPart === 'join' ? '1': '0.4'">
         <label for="username-join">Username</label>
-        <input type="text" id="username-join" placeholder="Username" formControlName="username-join">
+        <input type="text" id="username-join" placeholder="Username"
+               formControlName="username-join">
         <label for="email">Email</label>
-        <input type="text" id="email" placeholder="Email" formControlName="email">
+        <input type="text" id="email" placeholder="Email"
+               formControlName="email">
         <label for="password-join">Password</label>
-        <input type="password" id="password-join" autocomplete="off" formControlName="password-join">
+        <input type="password" id="password-join" autocomplete="off"
+               formControlName="password-join">
         <label for="password-confirm">Confirm Password</label>
-        <input type="password" id="password-confirm" autocomplete="off" formControlName="password-confirm">
+        <input type="password" id="password-confirm" autocomplete="off"
+               formControlName="password-confirm">
         <button type="submit" class="pure-button pure-button-secondary"
                 [disabled]="!joinForm.valid">Join</button>
       </div>
@@ -27,9 +31,11 @@
     <fieldset>
       <div [style.opacity]="showPart === 'login' ? '1': '0.4'">
         <label for="username-login">Username</label>
-        <input type="text" id="username-login" placeholder="Username" formControlName="username-login">
+        <input type="text" id="username-login" placeholder="Username"
+               formControlName="username-login">
         <label for="password-login">Password</label>
-        <input type="password" id="password-login" autocomplete="off" formControlName="password-login">
+        <input type="password" id="password-login" autocomplete="off"
+               formControlName="password-login">
         <button type="submit" class="pure-button pure-button-secondary"
                 [disabled]="!loginForm.valid">Login</button>
       </div>

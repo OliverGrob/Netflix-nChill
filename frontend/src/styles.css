@@ -1,6 +1,13 @@
+html {
+  height: 100%;
+}
+
 body {
   background-image: url("assets/background1.jpg");
   color: white;
+  min-height: 100%;
+  position: relative;
+  padding-bottom: 421px;
 }
 
 input {
@@ -65,4 +72,16 @@ input {
 
 .text-custom {
   color: #0D47A1;
+}
+
+.cursor-like {
+  cursor: pointer;
+}
+
+app-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 421px;
 }
