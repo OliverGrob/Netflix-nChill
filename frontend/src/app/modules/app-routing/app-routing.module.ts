@@ -9,6 +9,7 @@ import { WatchlistComponent } from '../../components/user-page/watchlist/watchli
 import { FavouritesComponent } from '../../components/user-page/favourites/favourites.component';
 import { WatchedComponent } from '../../components/user-page/watched/watched.component';
 import { AuthGuard } from '../../guards/auth/auth.guard';
+import { StatisticsComponent } from '../../components/user-page/statistics/statistics.component';
 
 const routes: Routes = [
   { path: '', component: TrendingComponent },
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'search', component: SearchComponent },
   { path: 'user-page', component: UserPageComponent, children: [
       { path: '', redirectTo: 'watchlist', pathMatch: 'full' },
+      { path: 'statistics', component: StatisticsComponent },
       { path: 'watchlist', component: WatchlistComponent },
       { path: 'favourites', component: FavouritesComponent },
       { path: 'watched', component: WatchedComponent }

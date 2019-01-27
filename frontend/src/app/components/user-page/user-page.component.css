@@ -1,4 +1,4 @@
-.watchlist, .favourites, .watched, .user-stats {
+.watchlist, .favourites, .watched, .statistics {
   text-align: center;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -9,12 +9,7 @@
   cursor: pointer;
 }
 
-.user-stats {
-  background-color: #0D47A1;
-  cursor: default;
-}
-
-.watchlist-active, .favourites-active, .watched-active {
+.watchlist-active, .favourites-active, .watched-active, .statistics-active {
   background-color: #0D47A1;
 }
 

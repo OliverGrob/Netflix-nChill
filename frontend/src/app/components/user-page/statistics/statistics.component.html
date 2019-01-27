@@ -1,0 +1,8 @@
+<div class="details p-2">
+  <div>
+    <div *ngIf="allGenres.length > 0"><b>Your watched series by genres:</b></div>
+    <canvas #pieChartCanvas id="pieChart">{{ pieChart }}</canvas>
+  </div>
+  <div>Total time wasted:</div>
+  <b>{{ user?.timeWasted | timeConverter }}</b>
+</div>

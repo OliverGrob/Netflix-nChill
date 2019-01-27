@@ -1,13 +1,10 @@
 <div class="container-fluid" *ngIf="contentLoaded">
   <div class="row text-light">
-    <div class="col-4">
-      <div class="user-stats">
-        <div>
-          <div *ngIf="allGenres.length > 0"><b>Your watched series by genres:</b></div>
-          <canvas #pieChartCanvas id="pieChart">{{ pieChart }}</canvas>
-        </div>
-        <div>Total time wasted:</div>
-        <b>{{ user?.timeWasted | timeConverter }}</b>
+    <div class="col-2">
+      <div class="statistics"
+           [routerLink]="['statistics']" routerLinkActive="statistics-active">
+        <i></i>
+        Statistics
       </div>
       <div class="watchlist"
            [routerLink]="['watchlist']" routerLinkActive="watchlist-active">
@@ -28,7 +25,7 @@
         <span class="badge badge-primary">{{ watchedEpisodesNum }}</span>
       </div>
     </div>
-    <div class="col-5">
+    <div class="col-6 mx-5">
       <router-outlet class="container"></router-outlet>
     </div>
     <div class="col-3 my-3">
