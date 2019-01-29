@@ -122,6 +122,3 @@ todo.txt
 # e2e
 frontend/e2e/*.js
 frontend/e2e/*
-
-# Spring
-*.properties
