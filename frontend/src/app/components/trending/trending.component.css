@@ -1,31 +1,10 @@
-.trending {
-  margin: 3%;
-}
-
-.first, .second {
-  display: inline-block;
-  width: 48%;
-  margin: 1%;
-  vertical-align: top;
-}
-
 .description {
   text-align: justify;
-  width: 50%;
-  vertical-align: top;
   font-size: 110%;
   letter-spacing: 1px;
 }
 
-.image {
-  width: 50%;
-  vertical-align: top;
-}
-
-img {
-  width: 75%;
-}
-
-.image, .description {
-  display: inline-block;
+.image > img {
+  min-width: 350px;
+  max-width: 350px;
 }
