@@ -16,10 +16,9 @@ purposes.
 What things you need to install the software and how to install them:
 - your favourite IDE
 - Angular 6+ for the frontend to work properly
-- Spring Boot for the backend
-- for the backend: spring boot configurations written in `application.properties` (linked below)
-- for the frontend: `node_modules` and `e2e` libraries added (Angular generates these at a new project start)
-- also run `npm install` to load all pachages used in the project
+- Spring Boot for the backend -> configurations written in `application.properties` (linked below)
+- `node_modules` and `e2e` libraries added to frontend package (Angular generates these at a new project start)
+- also run `npm install` to load all packages used in the project
 
 ```
 spring.datasource.url=jdbc:postgresql://localhost:5432/YOUR_DB_NAME
