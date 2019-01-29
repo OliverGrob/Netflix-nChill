@@ -49,5 +49,5 @@ A step by step series of examples that tell you how to get a development env run
 
 The page uses Spring Security to handle users correctly, since this is a REST application. Json Web Token is sent to the user
 back when logged in to be able to recognize the exact user when he requests some resource from the server later.
-**Important to note:** the server's `/series/` URL-s are public so anyone can reach the information stored there, you don't 
-have to be logged in or even registered.
+
+**Important to note:** the server's URL-s starting with `/series/` are public so anyone can reach the information stored there, you don't have to be logged in or to be registered.
