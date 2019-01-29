@@ -16,14 +16,14 @@ purposes.
 What things you need to install the software and how to install them:
 - your favourite IDE
 - Angular 6+ for the frontend to work properly
-- Spring Boot for the backend -> configurations written in `application.properties` (linked below)
+- Spring Boot for the backend -> add environment variables as shown in `application.properties` (linked below)
 - `node_modules` and `e2e` libraries added to frontend package (Angular generates these at a new project start)
 - also run `npm install` to load all packages used in the project
 
 ```
-spring.datasource.url=jdbc:postgresql://localhost:5432/YOUR_DB_NAME
-spring.datasource.username=YOUR_DB_USERNAME
-spring.datasource.password=YOUR_DB_PASSWORD
+spring.datasource.url=jdbc:postgresql://localhost:5432/${DB_NAME}
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
 spring.jpa.hibernate.ddl-auto=create-drop
 spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false
 ```
