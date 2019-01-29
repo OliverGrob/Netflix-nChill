@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable, of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 
 import { Series } from '../models/Series';
@@ -12,8 +12,6 @@ import { Series } from '../models/Series';
 export class SeriesService {
 
   private baseUrl = 'http://localhost:8080/series';
-  searchResult = new Subject<Series[]>();
-  selectedSeries = new Subject<Series>();
 
   constructor(private http: HttpClient) { }
 
@@ -25,16 +23,12 @@ export class SeriesService {
       );
   }
 
-  searchSeries(searchTerm: string): Observable<Series[]> {
-    if (!searchTerm.trim()) { return of([]); }
-
-    this.http.get<Series[]>(`${this.baseUrl}/search?searchTerm=${searchTerm}`)
+  searchSeries(searchTerm: string) {
+    return this.http.get<Series[]>(`${this.baseUrl}/search?searchTerm=${searchTerm}`)
       .pipe(
         tap(() => console.log('More series found!')),
         catchError(response => this.handleError(response))
-      ).subscribe((series: Series[]) => {
-        this.searchResult.next(series);
-      });
+      );
   }
 
   getTrendingSeries() {

@@ -51,17 +51,20 @@ export class WatchedComponent implements OnInit {
   onSelectDescription(seriesId: number) {
     this.seasonsOpen = [];
     this.seasonEpisodesOpen = undefined;
-    this.descriptionsOpen.push(seriesId);
+    if (this.descriptionsOpen.includes(seriesId)) this.descriptionsOpen.splice(this.descriptionsOpen.indexOf(seriesId), 1);
+    else this.descriptionsOpen.push(seriesId);
   }
 
   onSelectSeasons(seriesId: number) {
     this.descriptionsOpen = [];
-    this.seasonsOpen.push(seriesId);
+    if (this.seasonsOpen.includes(seriesId)) this.seasonsOpen.splice(this.seasonsOpen.indexOf(seriesId), 1);
+    else this.seasonsOpen.push(seriesId);
   }
 
   onSelectSingleSeason(season: Season, seriesId: number) {
     this.seasonsOpen = this.seasonsOpen.filter(currentSeriesId => currentSeriesId === seriesId);
-    this.seasonEpisodesOpen = season;
+    if (this.seasonEpisodesOpen === season) this.seasonEpisodesOpen = undefined;
+    else this.seasonEpisodesOpen = season;
   }
 
 }

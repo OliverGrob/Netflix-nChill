@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { UserService } from '../../services/user.service';
-import { SeriesService } from '../../services/series.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -16,7 +15,6 @@ export class NavbarComponent implements OnInit {
   searchToggle = false;
 
   constructor(private userService: UserService,
-              private seriesService: SeriesService,
               private router: Router,
               private auth: AuthService) { }
 
@@ -32,7 +30,6 @@ export class NavbarComponent implements OnInit {
   search(searchInput: string): void {
     searchInput = searchInput.trim();
     if (searchInput) {
-      this.seriesService.searchSeries(searchInput);
       this.router.navigate(['/search'], {queryParams: {'searchTerm': searchInput}});
       this.searchToggle = !this.searchToggle;
     }

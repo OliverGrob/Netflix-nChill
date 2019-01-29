@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 
 import { NgxSpinnerService } from 'ngx-spinner';
 
@@ -16,24 +16,35 @@ export class SearchComponent implements OnInit {
   contentLoaded = false;
   searchResult: Series[];
   selectedShow: Series;
+  searchTerm: string;
 
   constructor(private seriesService: SeriesService,
               private route: ActivatedRoute,
               private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
-    this.spinner.show();
-    this.seriesService.searchResult.subscribe(series => {
-      this.searchResult = series ? series : [];
-      this.contentLoaded = true;
-      this.spinner.hide();
-    });
-    this.seriesService.searchSeries(this.route.snapshot.queryParams['searchTerm']);
+    this.route.queryParams.subscribe(
+      (params: Params) => {
+        this.contentLoaded = false;
+        this.spinner.show();
+        this.searchTerm = params['searchTerm'];
+        this.seriesService.searchSeries(params['searchTerm']).subscribe(
+          (series: Series[]) => {
+            this.searchResult = series ? series : [];
+            this.contentLoaded = true;
+            this.spinner.hide();
+          }
+        );
+      }
+    );
   }
 
-  selectShow(show: Series) {
-    this.seriesService.selectedSeries.next(show);
-    this.selectedShow = show;
+  selectSeries(series: Series) {
+    this.selectedShow = series;
+  }
+
+  isLinkActive(url: string) {
+    console.log(url);
   }
 
 }
