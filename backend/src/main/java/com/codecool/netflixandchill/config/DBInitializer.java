@@ -17,7 +17,7 @@ import java.util.*;
 @Component
 class DBInitializer {
 
-    private static final int NUMBER_OF_PAGES_TO_DOWNLOAD = 1;
+    private static final int NUMBER_OF_PAGES_TO_DOWNLOAD = 10;
     private static final int MAX_NUMBER_OF_PAGES_TO_DOWNLOAD = 545;
 
     private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
@@ -76,13 +76,15 @@ class DBInitializer {
             Series series = Series.builder()
                     .title(currentSeries.get("name").getAsString())
                     .description(currentSeries.get("description").getAsString())
-                    .airDate(formatStringToDate(currentSeries.get("start_date").getAsString()))
                     .image(currentSeries.get("image_path").getAsString())
                     .trailer(currentSeries.get("youtube_link").getAsString())
                     .status(Status.valueOf(currentSeries.get("status").getAsString()
                     .replace(" ", "_").toUpperCase()))
                     .genres((convertJsonArrayToEnumGenre(currentSeries.get("genres").getAsJsonArray())))
                     .build();
+
+            if (currentSeries.get("star_date") != null)
+                series.setAirDate(formatStringToDate(currentSeries.get("start_date").getAsString()));
 
             Set<Integer> seasonSet = new HashSet<>();
 
