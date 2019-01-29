@@ -22,15 +22,9 @@ export class LoginComponent implements OnInit {
               private toastr: ToastrService) { }
 
   ngOnInit() {
-    this.route.url
-      .subscribe(
-        (urlSegments: UrlSegment[]) => {
-          this.showPart = urlSegments[0].path;
-        }
+    this.route.url.subscribe(
+        (urlSegments: UrlSegment[]) => this.showPart = urlSegments[0].path
       );
-    this.userService.loginStatus.subscribe(type => {
-      this.showPart = type;
-    });
     this.initForms();
   }
 

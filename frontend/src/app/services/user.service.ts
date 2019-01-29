@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-import { Subject } from 'rxjs/internal/Subject';
 import { Observable } from 'rxjs/internal/Observable';
 import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -20,7 +19,6 @@ import { AuthService } from './auth.service';
 export class UserService {
 
   private baseUrl = 'http://localhost:8080/users';
-  loginStatus = new Subject<string>();
 
   constructor(private http: HttpClient,
               private auth: AuthService,
