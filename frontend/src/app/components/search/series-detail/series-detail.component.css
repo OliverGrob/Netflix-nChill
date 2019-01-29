@@ -41,8 +41,13 @@ body {
 
 .all-seasons {
   display: table;
-  width: 37%;
-  margin: 1%;
+  width: 50%;
+}
+
+.series-detail-main {
+  min-height: 1500px;
+  max-height: 1500px;
+  overflow-y: scroll;
 }
 
 .description {
@@ -52,6 +57,7 @@ body {
   letter-spacing: 1px;
   margin: 1%;
   background: #eeeeee0d;
+  padding: 1%;
 }
 
 .season-title {
@@ -74,16 +80,9 @@ body {
   float: right;
 }
 
-.series-summary {
-  display: inline-block;
-  width: 68%;
-  vertical-align: top;
-}
-
-#image {
-  display: inline-block;
-  width: 30%;
-  margin: 1%;
+#image > img {
+  min-width: 350px;
+  max-width: 350px;
 }
 
 .plus, .list, .heart {
@@ -96,6 +95,7 @@ body {
   background: #eeeeee0d;
   width: 16%;
   text-align: center;
+  padding: 1%;
 }
 
 .all-episodes {

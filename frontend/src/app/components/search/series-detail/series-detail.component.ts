@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+
 import { ToastrService } from 'ngx-toastr';
 
 import { Series } from '../../../models/Series';
@@ -16,7 +17,7 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class SeriesDetailComponent implements OnInit {
 
-  series: Series;
+  @Input() series: Series;
   user: User;
   userLoggedIn: boolean = this.auth.isLoggedIn();
   openedSeasons: number[] = [];
@@ -46,10 +47,6 @@ export class SeriesDetailComponent implements OnInit {
           user.watchlist.forEach(series => this.watchlist.push(series.id));
         });
     }
-    this.seriesService.selectedSeries
-      .subscribe(
-        series => this.series = series
-      );
   }
 
   toggleWholeSeries(series: Series, operationIsAdd: boolean): void {
@@ -62,14 +59,16 @@ export class SeriesDetailComponent implements OnInit {
   toggleSingleSeason(season: Season, operationIsAdd: boolean): void {
     const operation = operationIsAdd ? 'added to' : 'removed from';
     this.userService.toggleSingleSeason(season).subscribe(
-      () => this.toastr.success(`Season ${season.seasonNumber} ${operation} your list!`)
+      () => this.toastr.success(`
+      '${this.series.title}' Season ${season.seasonNumber} ${operation} your list!`)
     );
   }
 
   toggleSingleEpisode(episode: Episode, operationIsAdd: boolean): void {
     const operation = operationIsAdd ? 'added to' : 'removed from';
     this.userService.toggleSingleEpisode(episode).subscribe(
-      () => this.toastr.success(`Episode ${episode.episodeNumber}: '${episode.title}' ${operation} your list!`)
+      () => this.toastr.success(`
+      Episode ${episode.episodeNumber}: '${episode.title}' ${operation} your list!`)
     );
   }
 

@@ -1,6 +1,7 @@
 .search-result {
-  width: 22%;
-  float: left;
+  min-height: 1500px;
+  max-height: 1500px;
+  overflow-y: scroll;
 }
 
 .search-item {
@@ -14,21 +15,9 @@
   color: #919191;
 }
 
-.search-title {
-  padding-left: 20px;
-}
-
-.detail {
-  width: 72%;
-  overflow: auto;
-}
-
 .message {
-  text-align: center;
   margin-top: 10%;
-}
-
-.message label {
-  font-size: 160%;
+  margin-bottom: 5%;
+  font-size: 400%;
   letter-spacing: 2px;
 }

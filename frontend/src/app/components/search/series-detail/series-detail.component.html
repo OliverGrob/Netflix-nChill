@@ -1,34 +1,36 @@
-<div class="series-detail" *ngIf="series">
+<div class="container-fluid series-detail-main" *ngIf="series">
   <!--{{ series.title }}-->
-  <div id="image">
-    <img src="{{ series.image }}" alt="{{ series.title }}">
-  </div>
-  <div class="series-summary">
-    <div class="icons">
-      <div class="tooltip-message">
-        <i class="plus fas fa-plus" *ngIf="userLoggedIn"
-           (click)="handleWatchedSeries(series)"
-           [ngClass]="alreadyCheckedSeries(series) ? 'already-checked' : ''"></i>
-        <span class="tooltip-text">Add to watched</span>
-      </div>
-      <div class="tooltip-message">
-        <i class="list fas fa-list" *ngIf="userLoggedIn" (click)="handleWatchlist(series)"></i>
-        <span class="tooltip-text">Add to watchlist</span>
-      </div>
-      <div class="tooltip-message">
-        <i class="heart" *ngIf="userLoggedIn"
-         (click)="handleFavourites(series)"
-         [ngClass]="alreadyFavourite(series) ? 'hearted fas fa-heart' : 'far fa-heart'"></i>
-        <span class="tooltip-text">Add to favourites</span>
-      </div>
+  <div class="row d-flex mt-3">
+    <div class="col-3 mr-5" id="image">
+      <img [src]="series.image" alt="{{ series.title }}">
     </div>
-    <div class="description">
-      <label [innerHTML]="series.description"></label>
-    </div>
-    <div class="genres">
-      <span *ngFor="let genre of series.genres">
-        #{{ genre | lowercase }}
-      </span>
+    <div class="col-8 ml-5">
+      <div class="icons">
+        <div class="tooltip-message">
+          <i class="plus fas fa-plus cursor-like" *ngIf="userLoggedIn"
+             (click)="handleWatchedSeries(series)"
+             [ngClass]="alreadyCheckedSeries(series) ? 'already-checked' : ''"></i>
+          <span class="tooltip-text">Add to watched</span>
+        </div>
+        <div class="tooltip-message">
+          <i class="list fas fa-list cursor-like" *ngIf="userLoggedIn" (click)="handleWatchlist(series)"></i>
+          <span class="tooltip-text">Add to watchlist</span>
+        </div>
+        <div class="tooltip-message">
+          <i class="heart cursor-like" *ngIf="userLoggedIn"
+           (click)="handleFavourites(series)"
+           [ngClass]="alreadyFavourite(series) ? 'hearted fas fa-heart' : 'far fa-heart'"></i>
+          <span class="tooltip-text">Add to favourites</span>
+        </div>
+      </div>
+      <div class="description">
+        <label [innerHTML]="series.description"></label>
+      </div>
+      <div class="genres">
+        <span *ngFor="let genre of series.genres">
+          #{{ genre | lowercase }}
+        </span>
+      </div>
     </div>
   </div>
   <div class="all-seasons">
@@ -36,10 +38,10 @@
       <div class="season-title">
         <div class="toggle-title" (click)="toggleSeason(season.id)">
           <label>Season {{ season.seasonNumber }}</label>
-          <i class="arrow"
+          <i class="arrow cursor-like"
              [ngClass]="alreadyOpened(season.id) ? 'fas fa-angle-double-up' : 'fas fa-angle-double-down'"></i>
         </div>
-        <i class="season-check" *ngIf="userLoggedIn"
+        <i class="season-check cursor-like" *ngIf="userLoggedIn"
            (click)="handleWatchedSeason(season)"
            [ngClass]="alreadyCheckedSeason(season) ? 'checked fas fa-check-square' : 'far fa-square'"></i>
       </div>
@@ -53,7 +55,7 @@
             <div class="episode-title">
               <label>{{ episode.title }}</label>
             </div>
-            <i class="episode-check" *ngIf="userLoggedIn"
+            <i class="episode-check cursor-like" *ngIf="userLoggedIn"
                (click)="handleWatchedEpisode(episode)"
                [ngClass]="alreadyCheckedEpisode(episode.id) ? 'checked fas fa-check-square' : 'far fa-square'"></i>
           </div>

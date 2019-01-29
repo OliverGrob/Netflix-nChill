@@ -1,16 +1,18 @@
 <div class="container-fluid text-light" *ngIf="contentLoaded">
   <div class="row">
     <div class="col-3 search-result">
-      <div class="search-item" *ngFor="let show of searchResult"
-           (click)="selectShow(show)">
-        <div class="search-title">{{ show.title }}</div>
+      <div class="search-item cursor-like" *ngFor="let series of searchResult"
+           (click)="selectSeries(series)">
+        <div>{{ series.title }}</div>
       </div>
     </div>
-    <div class="col-9 detail">
-      <app-series-detail></app-series-detail>
+    <div class="col-9">
+      <app-series-detail [series]="selectedShow"></app-series-detail>
     </div>
-    <div class="message" *ngIf="searchResult.length === 0">
-      <label>No series found</label>
+  </div>
+  <div class="row" *ngIf="searchResult.length === 0">
+    <div class="col-12 text-center font-weight-bold message">
+      No series with name '{{ searchTerm }}' found
     </div>
   </div>
 </div>
