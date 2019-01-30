@@ -1,23 +1,67 @@
 <div class="container-fluid text-light pt-5 px-5" *ngIf="contentLoaded">
-  <div class="row pb-5" *ngFor="let series of trendingSeries.slice(2)">
+  <div class="row pb-5">
     <div class="col-6">
-      <h2>{{ series.title }}'s new Season out</h2>
+      <h2>{{ trendingSeries[0].title }}'s new Season out</h2>
       <h3>Watch the promo video here: </h3>
-      <iframe width="700" height="394" [src]="sanitizeUrl('https://www.youtube.com/embed/' + series.trailer)"
-              frameborder="0" allowfullscreen
+      <iframe width="700" height="394" frameborder="0" allowfullscreen
+              [src]="sanitizeUrl('https://www.youtube.com/embed/' + trendingSeries[0].trailer)"
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture">
       </iframe>
     </div>
     <div class="col-6">
-      <h3>New series, {{ series.title }} trending on Netflix</h3>
+      <h3>
+        New series, <a class="font-weight-bold" routerLink="/">{{ trendingSeries[0].title }}</a> trending on Netflix
+      </h3>
       <div class="d-flex">
         <div class="description">
-          <label>{{ series.description }}</label>
+          <label [innerHTML]="trendingSeries[0].description"></label>
         </div>
         <div class="image pl-3">
-          <img [src]="series.image">
+          <img [src]="trendingSeries[0].image">
         </div>
       </div>
+    </div>
+  </div>
+  <div class="row my-5 py-5">
+    <div class="col-5 random-description mr-5">
+      <h2>Guess the series</h2>
+      <label class="random-description"
+             [innerHTML]="randomSeries.description | titleReplacer:randomSeries.title">
+      </label>
+    </div>
+    <div class="col-6 ml-5 random-description">
+      <h2>Which series' description is on the left?</h2>
+      <div class="random-description-answer cursor-like p-2"
+           *ngFor="let series of trendingSeries.slice(2)"
+           [ngClass]="userChosenSeries === series ? 'user-selected-series' : ''"
+           (click)="onSelectAnswer(series)">
+        <img class="random-series-image p-2" [src]="series.image">
+        <label class="cursor-like h3 pl-5 font-weight-bold">{{ series.title }}</label>
+      </div>
+      <button class="btn btn-primary my-2" (click)="onGuess()">Guess</button>
+    </div>
+  </div>
+  <div class="row pb-5">
+    <div class="col-6">
+      <h3>
+        <a class="font-weight-bold" routerLink="/">{{ trendingSeries[1].title }}</a> trending on Netflix
+      </h3>
+      <div class="d-flex">
+        <div class="image pr-3">
+          <img [src]="trendingSeries[1].image">
+        </div>
+        <div class="description">
+          <label [innerHTML]="trendingSeries[1].description"></label>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <h2>The new season of {{ trendingSeries[1].title }} is out</h2>
+      <h3>Watch the promo video here: </h3>
+      <iframe width="700" height="394" frameborder="0" allowfullscreen
+              [src]="sanitizeUrl('https://www.youtube.com/embed/' + trendingSeries[1].trailer)"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture">
+      </iframe>
     </div>
   </div>
 </div>
@@ -27,5 +71,5 @@
   size="large"
   color="#fff"
   type="square-jelly-box">
-  <p class="text-white font-weight-bold h3 mt-5">Loading user page...</p>
+  <p class="text-white font-weight-bold h3 mt-5">Loading trending page...</p>
 </ngx-spinner>

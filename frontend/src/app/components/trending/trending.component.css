@@ -8,3 +8,24 @@
   min-width: 350px;
   max-width: 350px;
 }
+
+.random-description {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.random-series-image {
+  min-width: 80px;
+  max-width: 80px;
+}
+
+.random-description-answer {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.random-description-answer:hover {
+  background-color: #0D47A1;
+}
+
+.user-selected-series {
+  background-color: #0D47A1;
+}
