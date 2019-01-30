@@ -5,6 +5,7 @@ import com.codecool.netflixandchill.repository.SeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +34,11 @@ public class SeriesService {
     }
 
     public List<Series> getTrendingSeries() {
-        return this.seriesRepository.findTop3ByOrderByAirDateDesc();
+        List<Series> trendingSeries = this.seriesRepository.findTop5ByOrderByAirDateDesc();
+
+        Collections.shuffle(trendingSeries);
+
+        return trendingSeries;
     }
 
 }

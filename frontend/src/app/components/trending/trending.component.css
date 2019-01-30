@@ -1,31 +1,31 @@
-.trending {
-  margin: 3%;
-}
-
-.first, .second {
-  display: inline-block;
-  width: 48%;
-  margin: 1%;
-  vertical-align: top;
-}
-
 .description {
   text-align: justify;
-  width: 50%;
-  vertical-align: top;
   font-size: 110%;
   letter-spacing: 1px;
 }
 
-.image {
-  width: 50%;
-  vertical-align: top;
+.image > img {
+  min-width: 350px;
+  max-width: 350px;
 }
 
-img {
-  width: 75%;
+.random-description {
+  background: rgba(0, 0, 0, 0.5);
 }
 
-.image, .description {
-  display: inline-block;
+.random-series-image {
+  min-width: 80px;
+  max-width: 80px;
+}
+
+.random-description-answer {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.random-description-answer:hover {
+  background-color: #0D47A1;
+}
+
+.user-selected-series {
+  background-color: #0D47A1;
 }

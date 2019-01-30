@@ -21,6 +21,7 @@ import { AppRoutingModule } from './modules/app-routing/app-routing.module';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { TimeConverterPipe } from './pipes/time-converter.pipe';
 import { FooterComponent } from './components/footer/footer.component';
+import { TitleReplacerPipe } from './pipes/title-replacer.pipe';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { FooterComponent } from './components/footer/footer.component';
     SeriesDetailComponent,
     TrendingComponent,
     TimeConverterPipe,
-    FooterComponent
+    FooterComponent,
+    TitleReplacerPipe
   ],
   imports: [
     BrowserModule,

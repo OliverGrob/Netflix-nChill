@@ -12,7 +12,7 @@ public interface SeriesRepository extends JpaRepository<Series, Long> {
 
     List<Series> findByTitleContainingIgnoreCase(String substring);
 
-    List<Series> findTop3ByOrderByAirDateDesc();
+    List<Series> findTop5ByOrderByAirDateDesc();
 
     List<Series> findByGenresContaining(Genre genreName);
 

@@ -1,21 +1,75 @@
-<div class="trending text-light">
-  <div class="first">
-    <h2>American Horror Story season 8 final episode airs today</h2>
-    <h3>Watch the promo video here: </h3>
-    <iframe width="700" height="394" src="https://www.youtube.com/embed/GmqfLDZ1uMQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<div class="container-fluid text-light pt-5 px-5" *ngIf="contentLoaded">
+  <div class="row pb-5">
+    <div class="col-6">
+      <h2>{{ trendingSeries[0].title }}'s new Season out</h2>
+      <h3>Watch the promo video here: </h3>
+      <iframe width="700" height="394" frameborder="0" allowfullscreen
+              [src]="sanitizeUrl('https://www.youtube.com/embed/' + trendingSeries[0].trailer)"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture">
+      </iframe>
+    </div>
+    <div class="col-6">
+      <h3>
+        New series, <a class="font-weight-bold" routerLink="/">{{ trendingSeries[0].title }}</a> trending on Netflix
+      </h3>
+      <div class="d-flex">
+        <div class="description">
+          <label [innerHTML]="trendingSeries[0].description"></label>
+        </div>
+        <div class="image pl-3">
+          <img [src]="trendingSeries[0].image">
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="second">
-    <h3>New series, Maniac trending on Netflix</h3>
-    <div class="description">
-      <label>
-        Maniac is an American psychological dark comedy-drama web television miniseries based on the Norwegian television series of the same name by Espen PA Lervaag, Håakon Bast Mossige, Kjetil Indregard, and Ole Marius Araldsen, that premiered on September 21, 2018 on Netflix.
-        The series, created by Patrick Somerville and directed by Cary Joji Fukunaga, follows two strangers who connect during a mind-bending pharmaceutical trial. It stars Emma Stone, Jonah Hill, Justin Theroux, Sonoya Mizuno, Gabriel Byrne, and Sally Field.
-        The series was officially announced in March 2016 with Netflix ordering the production straight-to-series that same month. Upon release, the series received positive reviews from critics, with many praising its visuals, direction and acting, particularly the performances of Stone and Hill.
+  <div class="row my-5 py-5">
+    <div class="col-5 random-description mr-5">
+      <h2>Guess the series</h2>
+      <label class="random-description"
+             [innerHTML]="randomSeries.description | titleReplacer:randomSeries.title">
       </label>
     </div>
-    <div class="image">
-      <img src="assets/maniac.jpg">
+    <div class="col-6 ml-5 random-description">
+      <h2>Which series' description is on the left?</h2>
+      <div class="random-description-answer cursor-like p-2"
+           *ngFor="let series of trendingSeries.slice(2)"
+           [ngClass]="userChosenSeries === series ? 'user-selected-series' : ''"
+           (click)="onSelectAnswer(series)">
+        <img class="random-series-image p-2" [src]="series.image">
+        <label class="cursor-like h3 pl-5 font-weight-bold">{{ series.title }}</label>
+      </div>
+      <button class="btn btn-primary my-2" (click)="onGuess()">Guess</button>
+    </div>
+  </div>
+  <div class="row pb-5">
+    <div class="col-6">
+      <h3>
+        <a class="font-weight-bold" routerLink="/">{{ trendingSeries[1].title }}</a> trending on Netflix
+      </h3>
+      <div class="d-flex">
+        <div class="image pr-3">
+          <img [src]="trendingSeries[1].image">
+        </div>
+        <div class="description">
+          <label [innerHTML]="trendingSeries[1].description"></label>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <h2>The new season of {{ trendingSeries[1].title }} is out</h2>
+      <h3>Watch the promo video here: </h3>
+      <iframe width="700" height="394" frameborder="0" allowfullscreen
+              [src]="sanitizeUrl('https://www.youtube.com/embed/' + trendingSeries[1].trailer)"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture">
+      </iframe>
     </div>
   </div>
 </div>
-<app-footer></app-footer>
+<app-footer *ngIf="contentLoaded"></app-footer>
+<ngx-spinner
+  bdColor="rgba(51,51,51,0.4)"
+  size="large"
+  color="#fff"
+  type="square-jelly-box">
+  <p class="text-white font-weight-bold h3 mt-5">Loading trending page...</p>
+</ngx-spinner>
